@@ -1023,7 +1023,7 @@ function ProductsFilterBarRenderer({
 // PRODUCT DETAIL RENDERERS WITH VARIANT IMAGE SWITCHING
 // ============================================================================
 
-function ProductImagesRenderer({
+export function ProductImagesRenderer({
   component,
   theme,
   product,
@@ -1034,11 +1034,8 @@ function ProductImagesRenderer({
 }) {
   const { data } = component;
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-
-  // Use the shared product detail context
   const { selectedVariantId } = useProductDetail();
 
-  // Get images based on product type and selected variant
   const images = useMemo(() => {
     if (!product) return [];
 
@@ -1046,18 +1043,13 @@ function ProductImagesRenderer({
       return product.main_image_url ? [product.main_image_url] : [];
     }
 
-    // For variable products, use selected variant from context
     const variantToUse = selectedVariantId
       ? product.variants?.find((v) => v.id === selectedVariantId)
       : product.variants?.[0];
 
-    if (!variantToUse) return [];
-
-    // Get all images for this variant
-    return variantToUse.image_urls || [];
+    return variantToUse?.image_urls || [];
   }, [product, selectedVariantId]);
 
-  // Reset selected image when variant changes
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setSelectedImageIndex(0);
@@ -1068,13 +1060,17 @@ function ProductImagesRenderer({
     portrait: "aspect-[3/4]",
     landscape: "aspect-video",
   };
+
   const br = getBorderRadius(theme.borderRadius);
 
   if (images.length === 0) {
     return (
       <div className="px-4 md:px-8 py-8">
         <div
-          className={`bg-gray-200 flex items-center justify-center ${aspectMap[data.mainImageAspect]}`}
+          className={cn(
+            "bg-gray-200 flex items-center justify-center w-full max-w-full",
+            aspectMap[data.mainImageAspect],
+          )}
           style={{ borderRadius: br }}
         >
           <Package className="h-16 md:h-24 w-16 md:w-24 text-gray-400" />
@@ -1085,12 +1081,14 @@ function ProductImagesRenderer({
 
   return (
     <div
-      className={`flex ${
-        data.thumbnailPosition === "left" && data.showThumbnails
-          ? "flex-row gap-2 md:gap-4"
-          : "flex-col gap-2 md:gap-4"
-      } px-4 md:px-8 py-6 md:py-8`}
+      className={cn(
+        "px-4 md:px-8 py-6 md:py-8 flex gap-4",
+        data.showThumbnails && data.thumbnailPosition === "left"
+          ? "flex-row"
+          : "flex-col",
+      )}
     >
+      {/* Thumbnails on left */}
       {data.showThumbnails && data.thumbnailPosition === "left" && (
         <div className="flex flex-col gap-2">
           {images.map((img, i) => (
@@ -1098,7 +1096,7 @@ function ProductImagesRenderer({
               key={i}
               onClick={() => setSelectedImageIndex(i)}
               className={cn(
-                "w-12 h-12 md:w-16 md:h-16 cursor-pointer border-2 transition-colors overflow-hidden",
+                "w-12 h-12 md:w-16 md:h-16 cursor-pointer border-2 overflow-hidden transition-colors",
                 selectedImageIndex === i
                   ? "border-blue-400"
                   : "border-gray-200 hover:border-gray-300",
@@ -1111,31 +1109,35 @@ function ProductImagesRenderer({
         </div>
       )}
 
+      {/* Main image */}
       <div
-        className={`flex-1 overflow-hidden ${data.zoomOnHover ? "group" : ""}`}
-        style={{ borderRadius: br }}
+        className={cn(
+          "flex-1 overflow-hidden relative",
+          data.zoomOnHover ? "group" : "",
+        )}
+        style={{ borderRadius: br, maxHeight: "600px" }} // max height to balance portrait
       >
-        <div className={`${aspectMap[data.mainImageAspect]} relative`}>
+        <div className={cn(aspectMap[data.mainImageAspect], "h-full w-full")}>
           <img
             src={images[selectedImageIndex]}
             alt={product?.product_name}
-            className={`w-full h-full object-cover ${
-              data.zoomOnHover
-                ? "transition-transform group-hover:scale-110"
-                : ""
-            }`}
+            className={cn(
+              "w-full h-full object-contain transition-transform",
+              data.zoomOnHover && "group-hover:scale-110",
+            )}
           />
         </div>
       </div>
 
+      {/* Thumbnails on bottom */}
       {data.showThumbnails && data.thumbnailPosition === "bottom" && (
-        <div className="flex gap-2 flex-wrap">
+        <div className="flex gap-2 flex-wrap mt-4 justify-center">
           {images.map((img, i) => (
             <div
               key={i}
               onClick={() => setSelectedImageIndex(i)}
               className={cn(
-                "w-12 h-12 md:w-16 md:h-16 cursor-pointer border-2 transition-colors overflow-hidden",
+                "w-12 h-12 md:w-16 md:h-16 cursor-pointer border-2 overflow-hidden transition-colors",
                 selectedImageIndex === i
                   ? "border-blue-400"
                   : "border-gray-200 hover:border-gray-300",
