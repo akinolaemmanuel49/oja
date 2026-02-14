@@ -1,6 +1,5 @@
 import { useState } from "react";
 import {
-  Store,
   Palette,
   Zap,
   Shield,
@@ -10,6 +9,7 @@ import {
   Sparkles,
   Package,
 } from "lucide-react";
+import HeroCarousel from "@/components/HeroCarousel";
 
 /**
  * Ọjà — Multi-tenant E-commerce Platform Demo
@@ -26,9 +26,17 @@ import {
 export default function LandingPage() {
   const [email, setEmail] = useState("");
 
-  const handleExploreDemo = (e: React.SyntheticEvent<HTMLFormElement>) => {
+  const handleReachOut = (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
-    window.location.href = import.meta.env.VITE_MAIN_APP_URL;
+
+    const subject = encodeURIComponent("Portfolio Inquiry / Reach Out");
+    const body = encodeURIComponent(
+      email
+        ? `Hi,\n\nI’d like to reach out. My email: ${email}`
+        : "Hi,\n\nI’d like to reach out.",
+    );
+
+    window.location.href = `mailto:biteatertest@gmail.com?subject=${subject}&body=${body}`;
   };
 
   return (
@@ -38,8 +46,11 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-2">
-              <Store className="h-8 w-8 text-blue-600" />
-              <span className="text-xl font-bold text-gray-900">Ọjà</span>
+              <img
+                src={import.meta.env.VITE_APP_LOGO}
+                alt="Oja Logo"
+                className="h-24 w-24"
+              />
             </div>
             <div className="hidden md:flex items-center space-x-8">
               <a href="#features" className="text-gray-600 hover:text-gray-900">
@@ -53,15 +64,9 @@ export default function LandingPage() {
               </a>
               <a
                 href={import.meta.env.VITE_MAIN_APP_URL}
-                className="text-blue-600 font-medium hover:text-blue-700"
-              >
-                Open Demo
-              </a>
-              <a
-                href={import.meta.env.VITE_MAIN_APP_URL}
                 className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
               >
-                Try the Builder
+                Try it out
               </a>
             </div>
           </div>
@@ -74,7 +79,9 @@ export default function LandingPage() {
           <div className="text-center">
             <div className="inline-flex items-center space-x-2 bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-medium mb-8">
               <Sparkles className="h-4 w-4" />
-              <span>Multi-tenant • Visual builder • TypeScript</span>
+              <span>
+                Multi-tenant • Visual builder • TypeScript • Python • Postgresql
+              </span>
             </div>
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 mb-6">
               Ọjà
@@ -84,14 +91,12 @@ export default function LandingPage() {
             <p className="text-xl text-gray-600 mb-12 max-w-3xl mx-auto">
               A full-stack portfolio project built to explore multi-tenancy,
               session-based auth, permissions, and a custom visual storefront
-              designer — all in TypeScript.
+              designer — with frontends built with React and TypeScript and the
+              backend built with Python and FastAPI.
             </p>
 
-            {/* CTA Form — now more "try demo" oriented */}
-            <form
-              onSubmit={handleExploreDemo}
-              className="max-w-md mx-auto mb-8"
-            >
+            {/* CTA Form to reach out */}
+            <form onSubmit={handleReachOut} className="max-w-md mx-auto mb-8">
               <div className="flex gap-2">
                 <input
                   type="email"
@@ -104,24 +109,15 @@ export default function LandingPage() {
                   type="submit"
                   className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center gap-2"
                 >
-                  Explore Demo
+                  Reach Out
                   <ArrowRight className="h-4 w-4" />
                 </button>
               </div>
             </form>
           </div>
 
-          {/* Hero Preview */}
-          <div className="mt-20">
-            <div className="relative">
-              <div className="absolute inset-0 bg-linear-to-t from-blue-100 to-transparent rounded-xl"></div>
-              <img
-                src="https://images.unsplash.com/photo-1661956602116-aa6865609028?w=1200&auto=format&fit=crop"
-                alt="Storefront Designer Preview"
-                className="w-full rounded-xl shadow-2xl border border-gray-200"
-              />
-            </div>
-          </div>
+          {/* Hero Carousel */}
+          <HeroCarousel />
         </div>
       </section>
 
@@ -296,7 +292,7 @@ export default function LandingPage() {
               <ArrowRight className="h-5 w-5" />
             </a>
             <a
-              href="https://github.com/akinolaemmanuel40/oja"
+              href="https://github.com/akinolaemmanuel49/oja"
               className="text-white border-2 border-white px-8 py-4 rounded-lg hover:bg-white/10 transition-colors font-medium text-lg"
             >
               View Source on GitHub
@@ -309,7 +305,8 @@ export default function LandingPage() {
       <footer className="bg-gray-900 text-gray-400 py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <p className="text-sm">
-            Ọjà — Personal full-stack portfolio project • 2024–2025
+            Ọjà — Personal full-stack portfolio project •{" "}
+            {new Date().getFullYear()}
           </p>
           <p className="text-sm mt-2 text-gray-500">
             Focused on multi-tenancy, secure sessions, permissions, visual
