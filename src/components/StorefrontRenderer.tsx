@@ -812,6 +812,14 @@ function ProductCard({
   const firstVariant = hasVariants ? product.variants![0] : null;
 
   const displayPrice = hasVariants ? firstVariant?.price : product.base_price;
+  const variantPrices =
+    product.variants
+      ?.map((variant) => variant.price)
+      .filter((price): price is number => price != null) ?? [];
+
+  const minPrice = variantPrices.length > 0 ? Math.min(...variantPrices) : null;
+  const maxPrice = variantPrices.length > 0 ? Math.max(...variantPrices) : null;
+
   const displayImageUrl = hasVariants
     ? firstVariant?.main_image_url
     : product.main_image_url;
@@ -865,7 +873,9 @@ function ProductCard({
             className="font-bold text-base md:text-lg lg:text-xl"
             style={{ color: theme.colors.primary }}
           >
-            ₦{displayPrice.toLocaleString()}
+            {hasVariants
+              ? `₦${minPrice?.toLocaleString()} - ₦${maxPrice?.toLocaleString()}`
+              : `₦${displayPrice.toLocaleString()}`}
           </p>
         )}
 
