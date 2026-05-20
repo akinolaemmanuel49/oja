@@ -999,32 +999,6 @@ function ProductsFilterBarRenderer({
           </div>
         </div>
       )}
-
-      {data.showTypeFilter && (
-        <div className="min-w-37.5 w-full sm:w-auto">
-          <Label className="text-xs font-medium mb-2 block">Product Type</Label>
-          <Select
-            value={filters.productType}
-            onValueChange={(value) =>
-              updateFilters({
-                productType: value as "all" | "simple" | "variable",
-              })
-            }
-          >
-            <SelectTrigger
-              className="w-full bg-white"
-              style={{ borderRadius: getBorderRadius(theme.borderRadius) }}
-            >
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent className="bg-white">
-              <SelectItem value="all">All Types</SelectItem>
-              <SelectItem value="simple">Simple</SelectItem>
-              <SelectItem value="variable">Variable</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-      )}
     </div>
   );
 }

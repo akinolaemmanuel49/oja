@@ -1,13 +1,15 @@
-import { useEffect, useState } from "react";
+import { lazy, useEffect, useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Toaster } from "@/components/ui/sonner";
 
 // Pages
-import StorefrontHome from "./pages/StorefrontHome";
-import StorefrontProducts from "./pages/StorefrontProducts";
-import StorefrontProductDetail from "./pages/StorefrontProductDetail";
-import StorefrontNotFound from "./pages/StorefrontNotFound";
+const StorefrontHomePage = lazy(() => import("./pages/StorefrontHome"));
+const StorefrontProductsPage = lazy(() => import("./pages/StorefrontProducts"));
+const StorefrontProductDetailPage = lazy(
+  () => import("./pages/StorefrontProductDetail"),
+);
+const StorefrontNotFoundPage = lazy(() => import("./pages/StorefrontNotFound"));
 
 // Utils
 import { extractSubdomain } from "./utils/subdomain";
@@ -95,27 +97,27 @@ export default function StorefrontApp({ storefrontSlug }: StorefrontAppProps) {
           {/* Home page */}
           <Route
             path="/"
-            element={<StorefrontHome storefrontSlug={storefrontSlug} />}
+            element={<StorefrontHomePage storefrontSlug={storefrontSlug} />}
           />
 
           {/* Products listing page */}
           <Route
             path="/products"
-            element={<StorefrontProducts storefrontSlug={storefrontSlug} />}
+            element={<StorefrontProductsPage storefrontSlug={storefrontSlug} />}
           />
 
           {/* Product detail page */}
           <Route
             path="/products/:productId"
             element={
-              <StorefrontProductDetail storefrontSlug={storefrontSlug} />
+              <StorefrontProductDetailPage storefrontSlug={storefrontSlug} />
             }
           />
 
           {/* 404 fallback */}
           <Route
             path="/404"
-            element={<StorefrontNotFound storefrontSlug={storefrontSlug} />}
+            element={<StorefrontNotFoundPage storefrontSlug={storefrontSlug} />}
           />
 
           {/* Catch all - redirect to 404 */}
