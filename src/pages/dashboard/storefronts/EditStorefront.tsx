@@ -82,7 +82,7 @@ function EditStorefrontForm({ storefront }: { storefront: Storefront }) {
     domain: storefront.domain || "",
     status: (storefront.status === "active"
       ? "active"
-      : "suspended") as StorefrontStatus,
+      : "inactive") as StorefrontStatus,
   });
 
   const [errors, setErrors] = useState<

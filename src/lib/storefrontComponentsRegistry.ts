@@ -224,12 +224,12 @@ export const COMPONENT_REGISTRY: Record<ComponentType, ComponentDefinition> = {
           content: "<p>Product description goes here...</p>",
           enabled: true,
         },
-        {
-          id: "tab-specs",
-          label: "Specifications",
-          content: "<p>Product specifications...</p>",
-          enabled: true,
-        },
+        // {
+        //   id: "tab-specs",
+        //   label: "Specifications",
+        //   content: "<p>Product specifications...</p>",
+        //   enabled: true,
+        // },
       ],
       defaultTab: "tab-description",
       tabStyle: "underline",

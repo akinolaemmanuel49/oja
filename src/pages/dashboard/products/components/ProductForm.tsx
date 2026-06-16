@@ -20,9 +20,7 @@ import {
 } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2, ArrowLeft, Plus } from "lucide-react";
-
 import { ImageUploader } from "@/components/ImageUploader";
-
 import type { Product, CreateProduct, ProductUpdate } from "@/types/product";
 import { useNavigate } from "react-router-dom";
 import { AppHref } from "@/routes/constants";
@@ -54,7 +52,6 @@ type ProductFormProps = ProductFormPropsCreate | ProductFormPropsEdit;
 export function ProductForm(props: ProductFormProps) {
   const { mode, onSubmit, isSubmitting, submitError, initialData } = props;
   const navigate = useNavigate();
-
   const isEdit = mode === "edit";
 
   const defaultValues: FormData =
@@ -86,17 +83,19 @@ export function ProductForm(props: ProductFormProps) {
     defaultValues,
   });
 
-  // For add variants (create: "variants", edit: "variants_to_add")
+  // Determine the correct array name for new variants
+  const newArrayName = isEdit ? "variants_to_add" : "variants";
+
+  // Field arrays
   const {
     fields: addVariantFields,
     append: addAppend,
     remove: addRemove,
   } = useFieldArray({
     control,
-    name: isEdit ? "variants_to_add" : "variants",
+    name: newArrayName, // dynamic
   });
 
-  // For update variants (edit only)
   const { fields: updateVariantFields, remove: updateRemove } = useFieldArray({
     control,
     name: "variants_to_update",
@@ -153,7 +152,6 @@ export function ProductForm(props: ProductFormProps) {
     updateRemove(index);
   };
 
-  // Handler for simple product images
   const handleSimpleProductImagesChange = (
     urls: string[],
     mainUrl?: string,
@@ -164,7 +162,6 @@ export function ProductForm(props: ProductFormProps) {
 
   const formSubmit = (data: FormData) => {
     let payload: CreateProduct | ProductUpdate;
-
     if (mode === "create") {
       payload = transformFormDataToApiPayload(data);
       return onSubmit(payload as CreateProduct);
@@ -197,9 +194,8 @@ export function ProductForm(props: ProductFormProps) {
           </Alert>
         )}
 
-        {/* Two-column layout similar to ProductDetail */}
+        {/* Two-column layout */}
         <div className="grid gap-6 md:grid-cols-2">
-          {/* Left Column - Basic Information */}
           <Card>
             <CardHeader>
               <CardTitle>Basic Information</CardTitle>
@@ -210,7 +206,6 @@ export function ProductForm(props: ProductFormProps) {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              {/* Product Name */}
               <div className="space-y-2">
                 <Label htmlFor="name">
                   Name <span className="text-red-500">*</span>
@@ -225,7 +220,6 @@ export function ProductForm(props: ProductFormProps) {
                 )}
               </div>
 
-              {/* Description */}
               <div className="space-y-2">
                 <Label htmlFor="description">Description</Label>
                 <Textarea
@@ -236,7 +230,6 @@ export function ProductForm(props: ProductFormProps) {
                 />
               </div>
 
-              {/* Product Type */}
               <div className="space-y-2">
                 <Label htmlFor="type">Product Type</Label>
                 <Controller
@@ -255,7 +248,7 @@ export function ProductForm(props: ProductFormProps) {
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="bg-white">
                         <SelectItem value="simple">Simple Product</SelectItem>
                         <SelectItem value="variable">
                           Variable Product
@@ -277,7 +270,6 @@ export function ProductForm(props: ProductFormProps) {
             </CardContent>
           </Card>
 
-          {/* Right Column - Images (Simple Product Only) */}
           {productType === "simple" && (
             <ImageUploader
               existingImages={watch("image_urls") ?? []}
@@ -288,7 +280,6 @@ export function ProductForm(props: ProductFormProps) {
             />
           )}
 
-          {/* Right Column - Placeholder for Variable Products */}
           {productType === "variable" && (
             <Card>
               <CardHeader>
@@ -328,7 +319,6 @@ export function ProductForm(props: ProductFormProps) {
                   disabled={isSubmitting}
                 />
               </div>
-
               <div className="space-y-2">
                 <Label htmlFor="sku">SKU</Label>
                 <Input
@@ -337,7 +327,6 @@ export function ProductForm(props: ProductFormProps) {
                   disabled={isSubmitting}
                 />
               </div>
-
               <div className="space-y-2">
                 <Label htmlFor="stock_quantity">Stock Quantity</Label>
                 <Input
@@ -351,7 +340,6 @@ export function ProductForm(props: ProductFormProps) {
                   disabled={isSubmitting}
                 />
               </div>
-
               <div className="space-y-2">
                 <Label htmlFor="re_order_level">Re-order Level</Label>
                 <Input
@@ -396,6 +384,7 @@ export function ProductForm(props: ProductFormProps) {
                   <ExistingVariantCard
                     key={field.id}
                     variantIndex={index}
+                    arrayName="variants_to_update"
                     control={control}
                     register={register}
                     watch={watch}
@@ -405,11 +394,12 @@ export function ProductForm(props: ProductFormProps) {
                   />
                 ))}
 
-              {/* New variants */}
+              {/* New variants (create or edit) */}
               {addVariantFields.map((field, index) => (
                 <NewVariantCard
                   key={field.id}
                   variantIndex={index}
+                  arrayName={newArrayName}
                   control={control}
                   register={register}
                   watch={watch}
@@ -432,7 +422,6 @@ export function ProductForm(props: ProductFormProps) {
           </Card>
         )}
 
-        {/* Form Actions */}
         <div className="flex gap-4 pt-4">
           <Button type="submit" disabled={isSubmitting} className="flex-1">
             {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}

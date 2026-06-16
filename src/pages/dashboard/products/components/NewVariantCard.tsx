@@ -4,14 +4,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { Plus, Trash2, X } from "lucide-react";
-
 import { ImageUploader } from "@/components/ImageUploader";
 
-/**
- * NewVariantCard (for both modes)
- */
 type NewVariantCardProps = {
   variantIndex: number;
+  arrayName: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   control: any;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -28,6 +25,7 @@ type NewVariantCardProps = {
 
 export function NewVariantCard({
   variantIndex,
+  arrayName,
   control,
   register,
   watch,
@@ -42,12 +40,19 @@ export function NewVariantCard({
     remove: removeAttribute,
   } = useFieldArray({
     control,
-    name: `variants_to_add.${variantIndex}.attributePairs`,
+    name: `${arrayName}.${variantIndex}.attributePairs`,
   });
 
   const handleVariantImagesChange = (urls: string[], mainUrl?: string) => {
-    setValue(`variants_to_add.${variantIndex}.image_urls`, urls);
-    setValue(`variants_to_add.${variantIndex}.main_image_url`, mainUrl);
+    setValue(`${arrayName}.${variantIndex}.image_urls`, urls);
+    setValue(`${arrayName}.${variantIndex}.main_image_url`, mainUrl);
+  };
+
+  // Helper to get error path for this variant
+  const getError = (field: string) => {
+    // errors.variants_to_add or errors.variants - but we can use arrayName
+    // Use the field name from the register path
+    return errors[arrayName]?.[variantIndex]?.[field];
   };
 
   return (
@@ -65,57 +70,54 @@ export function NewVariantCard({
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">
-        {/* Left side - Fields */}
         <div className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor={`variants_to_add.${variantIndex}.sku`}>
+            <Label htmlFor={`${arrayName}.${variantIndex}.sku`}>
               SKU <span className="text-red-500">*</span>
             </Label>
             <Input
-              id={`variants_to_add.${variantIndex}.sku`}
-              {...register(`variants_to_add.${variantIndex}.sku`, {
+              id={`${arrayName}.${variantIndex}.sku`}
+              {...register(`${arrayName}.${variantIndex}.sku`, {
                 required: "SKU is required",
               })}
               disabled={isPending}
             />
-            {errors.variants_to_add?.[variantIndex]?.sku && (
-              <p className="text-sm text-red-500">
-                {errors.variants_to_add[variantIndex].sku.message}
-              </p>
+            {getError("sku") && (
+              <p className="text-sm text-red-500">{getError("sku").message}</p>
             )}
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor={`variants_to_add.${variantIndex}.price`}>
+            <Label htmlFor={`${arrayName}.${variantIndex}.price`}>
               Price (₦) <span className="text-red-500">*</span>
             </Label>
             <Input
-              id={`variants_to_add.${variantIndex}.price`}
+              id={`${arrayName}.${variantIndex}.price`}
               type="number"
               step="0.01"
               min="0"
-              {...register(`variants_to_add.${variantIndex}.price`, {
+              {...register(`${arrayName}.${variantIndex}.price`, {
                 required: "Price is required",
                 valueAsNumber: true,
               })}
               disabled={isPending}
             />
-            {errors.variants_to_add?.[variantIndex]?.price && (
+            {getError("price") && (
               <p className="text-sm text-red-500">
-                {errors.variants_to_add[variantIndex].price.message}
+                {getError("price").message}
               </p>
             )}
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor={`variants_to_add.${variantIndex}.stock_quantity`}>
+            <Label htmlFor={`${arrayName}.${variantIndex}.stock_quantity`}>
               Stock Quantity
             </Label>
             <Input
-              id={`variants_to_add.${variantIndex}.stock_quantity`}
+              id={`${arrayName}.${variantIndex}.stock_quantity`}
               type="number"
               min="0"
-              {...register(`variants_to_add.${variantIndex}.stock_quantity`, {
+              {...register(`${arrayName}.${variantIndex}.stock_quantity`, {
                 valueAsNumber: true,
               })}
               disabled={isPending}
@@ -123,21 +125,20 @@ export function NewVariantCard({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor={`variants_to_add.${variantIndex}.re_order_level`}>
+            <Label htmlFor={`${arrayName}.${variantIndex}.re_order_level`}>
               Re-order Level
             </Label>
             <Input
-              id={`variants_to_add.${variantIndex}.re_order_level`}
+              id={`${arrayName}.${variantIndex}.re_order_level`}
               type="number"
               min="0"
-              {...register(`variants_to_add.${variantIndex}.re_order_level`, {
+              {...register(`${arrayName}.${variantIndex}.re_order_level`, {
                 valueAsNumber: true,
               })}
               disabled={isPending}
             />
           </div>
 
-          {/* Attributes */}
           <div className="space-y-2">
             <div className="flex justify-between items-center">
               <Label>Attributes</Label>
@@ -157,7 +158,7 @@ export function NewVariantCard({
                   <Input
                     placeholder="Key (e.g., color)"
                     {...register(
-                      `variants_to_add.${variantIndex}.attributePairs.${attrIndex}.key`,
+                      `${arrayName}.${variantIndex}.attributePairs.${attrIndex}.key`,
                     )}
                     disabled={isPending}
                   />
@@ -166,7 +167,7 @@ export function NewVariantCard({
                   <Input
                     placeholder="Value (e.g., red)"
                     {...register(
-                      `variants_to_add.${variantIndex}.attributePairs.${attrIndex}.value`,
+                      `${arrayName}.${variantIndex}.attributePairs.${attrIndex}.value`,
                     )}
                     disabled={isPending}
                   />
@@ -190,15 +191,12 @@ export function NewVariantCard({
           </div>
         </div>
 
-        {/* Right side - Images */}
         <div>
           <ImageUploader
             existingImages={
-              watch(`variants_to_add.${variantIndex}.image_urls`) ?? []
+              watch(`${arrayName}.${variantIndex}.image_urls`) ?? []
             }
-            mainImageUrl={watch(
-              `variants_to_add.${variantIndex}.main_image_url`,
-            )}
+            mainImageUrl={watch(`${arrayName}.${variantIndex}.main_image_url`)}
             onImagesChange={handleVariantImagesChange}
             maxImages={8}
             uploaderId={`variant-add-${variantIndex}-images`}

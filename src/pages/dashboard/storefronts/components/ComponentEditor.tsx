@@ -1246,25 +1246,25 @@ function ProductTabsEditor({
       tabs: data.tabs.map((t) => (t.id === id ? { ...t, ...updates } : t)),
     });
   };
-  const addTab = () => {
-    const newId = `tab-${Date.now()}`;
-    onUpdate({
-      tabs: [
-        ...data.tabs,
-        {
-          id: newId,
-          label: "New Tab",
-          content: "<p>Content here...</p>",
-          enabled: true,
-        },
-      ],
-    });
-    setEditingTabId(newId);
-  };
-  const removeTab = (id: string) => {
-    onUpdate({ tabs: data.tabs.filter((t) => t.id !== id) });
-    if (editingTabId === id) setEditingTabId(null);
-  };
+  // const addTab = () => {
+  //   const newId = `tab-${Date.now()}`;
+  //   onUpdate({
+  //     tabs: [
+  //       ...data.tabs,
+  //       {
+  //         id: newId,
+  //         label: "New Tab",
+  //         content: "<p>Content here...</p>",
+  //         enabled: true,
+  //       },
+  //     ],
+  //   });
+  //   setEditingTabId(newId);
+  // };
+  // const removeTab = (id: string) => {
+  //   onUpdate({ tabs: data.tabs.filter((t) => t.id !== id) });
+  //   if (editingTabId === id) setEditingTabId(null);
+  // };
 
   return (
     <div className="space-y-4">
@@ -1314,14 +1314,14 @@ function ProductTabsEditor({
                 >
                   {editingTabId === tab.id ? "Done" : "Edit"}
                 </Button>
-                <Button
+                {/*<Button
                   size="sm"
                   variant="ghost"
                   onClick={() => removeTab(tab.id)}
                   className="h-7 w-7 p-0 text-red-500 hover:bg-red-50"
                 >
                   <Trash2 className="h-3 w-3" />
-                </Button>
+                </Button>*/}
               </div>
               {/* Content editor — only shown when tab is being edited */}
               {editingTabId === tab.id && (
@@ -1335,17 +1335,17 @@ function ProductTabsEditor({
             </div>
           ))}
         </div>
-        <Button
+        {/*<Button
           size="sm"
           variant="outline"
           onClick={addTab}
           className="mt-2 w-full"
         >
           <Plus className="h-3 w-3 mr-1" /> Add Tab
-        </Button>
+        </Button>*/}
       </div>
 
-      {data.tabs.length > 0 && (
+      {/*{data.tabs.length > 0 && (
         <div>
           <Label>Default Open Tab</Label>
           <Select
@@ -1366,7 +1366,7 @@ function ProductTabsEditor({
             </SelectContent>
           </Select>
         </div>
-      )}
+      )}*/}
     </div>
   );
 }

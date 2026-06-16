@@ -66,7 +66,7 @@ export default function DashboardHome() {
   const actionItems = [
     {
       permission: "storefronts:create",
-      label: "• Create your first storefront to start selling",
+      label: "• Add storefronts to sell your products",
     },
     {
       permission: "products:create",
