@@ -957,7 +957,6 @@ function ProductsHeaderRenderer({
 
 function ProductsFilterBarRenderer({
   component,
-  theme,
 }: {
   component: Extract<PageComponent, { type: "products_filter_bar" }>;
   theme: ThemeConfig;

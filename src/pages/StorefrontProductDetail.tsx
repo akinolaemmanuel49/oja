@@ -4,6 +4,7 @@ import { StorefrontProvider } from "@/contexts/StorefrontContext";
 import { StorefrontRenderer } from "@/components/StorefrontRenderer";
 import { StorefrontLoader } from "@/components/StorefrontLoader";
 import { StorefrontError } from "@/components/StorefrontError";
+import { SEO } from "@/components/SEO";
 
 interface StorefrontProductDetailProps {
   storefrontSlug: string;
@@ -91,16 +92,27 @@ export default function StorefrontProductDetail({
 
   // At this point, we know pageSpec exists and currentProduct exists
   return (
-    <StorefrontProvider
-      storefrontId={storefront.id}
-      storefrontSlug={storefrontSlug}
-      mode="storefront"
-    >
-      <StorefrontRenderer
-        spec={pageSpec!}
-        storefrontProducts={products}
-        currentProduct={currentProduct!}
+    <>
+      <SEO
+        storefrontSlug={storefrontSlug}
+        title={`${storefront.name} - ${currentProduct?.product_name}`}
+        description={storefront.design_config?.pages.home.meta.description}
+        image=""
+        type="product"
+        keywords={[currentProduct?.product_name || "", "product", "shop"]}
       />
-    </StorefrontProvider>
+
+      <StorefrontProvider
+        storefrontId={storefront.id}
+        storefrontSlug={storefrontSlug}
+        mode="storefront"
+      >
+        <StorefrontRenderer
+          spec={pageSpec!}
+          storefrontProducts={products}
+          currentProduct={currentProduct!}
+        />
+      </StorefrontProvider>
+    </>
   );
 }

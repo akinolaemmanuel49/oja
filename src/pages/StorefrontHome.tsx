@@ -3,6 +3,7 @@ import { StorefrontProvider } from "@/contexts/StorefrontContext";
 import { StorefrontRenderer } from "@/components/StorefrontRenderer";
 import { StorefrontLoader } from "@/components/StorefrontLoader";
 import { StorefrontError } from "@/components/StorefrontError";
+import { SEO } from "@/components/SEO";
 
 interface StorefrontHomeProps {
   storefrontSlug: string;
@@ -57,6 +58,15 @@ export default function StorefrontHome({
     );
   }
 
+  if (products.length === 0) {
+    return (
+      <StorefrontError
+        title="Store has no products"
+        message="This store isn't currently stocked. Please check back later."
+      />
+    );
+  }
+
   if (!isPageConfigured) {
     return (
       <StorefrontError
@@ -68,12 +78,23 @@ export default function StorefrontHome({
 
   // At this point, we know pageSpec exists because isPageConfigured is true
   return (
-    <StorefrontProvider
-      storefrontId={storefront.id}
-      storefrontSlug={storefrontSlug}
-      mode="storefront"
-    >
-      <StorefrontRenderer spec={pageSpec!} storefrontProducts={products} />
-    </StorefrontProvider>
+    <>
+      <SEO
+        storefrontSlug={storefrontSlug}
+        title={`${storefront.name} - Home`}
+        description={storefront.design_config?.pages.home.meta.description}
+        image=""
+        keywords={[]}
+        type="website"
+      />
+
+      <StorefrontProvider
+        storefrontId={storefront.id}
+        storefrontSlug={storefrontSlug}
+        mode="storefront"
+      >
+        <StorefrontRenderer spec={pageSpec!} storefrontProducts={products} />
+      </StorefrontProvider>
+    </>
   );
 }
