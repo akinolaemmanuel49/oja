@@ -31,7 +31,10 @@ export default function Login() {
 
     onSuccess: async () => {
       await refreshSession();
-      navigate(AppHref.dashboardHomeRoute, { replace: true });
+
+      // Not a great solution, but it works
+      window.location.reload();
+      // navigate(AppHref.dashboardHomeRoute, { replace: true });
     },
     onError: (err: unknown) => {
       let message = "Invalid credentials";
