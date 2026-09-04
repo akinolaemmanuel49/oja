@@ -1,0 +1,20 @@
+{
+  "name": "oja-monorepo",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "oja-app",
+    "oja-storefront"
+  ],
+  "scripts": {
+    "install:all": "npm install --workspaces --include-workspace-root",
+    "build:app": "npm run build --workspace=oja-app",
+    "build:storefront": "npm run build --workspace=oja-storefront",
+    "lint:app": "npm run lint --workspace=oja-app",
+    "lint:storefront": "npm run lint --workspace=oja-storefront"
+  },
+  "allowScripts": {},
+  "dependencies": {
+    "axios": "^1.20.0"
+  }
+}

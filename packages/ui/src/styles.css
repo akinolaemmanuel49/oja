@@ -1,0 +1,178 @@
+/* ============================================================
+   @oja/ui — Design Tokens (Stripe/Linear-inspired, clean & minimal)
+   ============================================================ */
+
+:root {
+  /* Brand palette */
+  --oja-blue-50: #eef4ff;
+  --oja-blue-100: #dbe6fe;
+  --oja-blue-200: #bdd2fe;
+  --oja-blue-300: #93b4fd;
+  --oja-blue-400: #6090fa;
+  --oja-blue-500: #3b6cf6;
+  --oja-blue-600: #2563eb;
+  --oja-blue-700: #1d4fd7;
+  --oja-blue-800: #1e40af;
+  --oja-blue-900: #1e3a8a;
+
+  /* Neutral scale */
+  --oja-gray-25: #fcfcfd;
+  --oja-gray-50: #f9fafb;
+  --oja-gray-100: #f3f4f6;
+  --oja-gray-200: #e5e7eb;
+  --oja-gray-300: #d1d5db;
+  --oja-gray-400: #9ca3af;
+  --oja-gray-500: #6b7280;
+  --oja-gray-600: #4b5563;
+  --oja-gray-700: #374151;
+  --oja-gray-800: #1f2937;
+  --oja-gray-900: #111827;
+  --oja-gray-950: #030712;
+
+  /* Semantic tokens */
+  --oja-background: #ffffff;
+  --oja-foreground: #111827;
+  --oja-muted: #f3f4f6;
+  --oja-muted-foreground: #6b7280;
+  --oja-card: #ffffff;
+  --oja-card-foreground: #111827;
+  --oja-border: #e5e7eb;
+  --oja-input: #d1d5db;
+  --oja-primary: #2563eb;
+  --oja-primary-hover: #1d4fd7;
+  --oja-primary-foreground: #ffffff;
+  --oja-secondary: #f3f4f6;
+  --oja-secondary-foreground: #1f2937;
+  --oja-accent: #eef4ff;
+  --oja-accent-foreground: #1e3a8a;
+  --oja-destructive: #ef4444;
+  --oja-destructive-foreground: #ffffff;
+  --oja-success: #16a34a;
+  --oja-success-foreground: #ffffff;
+  --oja-warning: #f59e0b;
+  --oja-warning-foreground: #1a1a1a;
+  --oja-ring: #93b4fd;
+
+  /* Radii */
+  --oja-radius-sm: 6px;
+  --oja-radius: 8px;
+  --oja-radius-md: 10px;
+  --oja-radius-lg: 12px;
+  --oja-radius-xl: 16px;
+
+  /* Shadows (refined, layered) */
+  --oja-shadow-xs: 0 1px 2px 0 rgb(16 24 40 / 0.05);
+  --oja-shadow-sm: 0 1px 3px 0 rgb(16 24 40 / 0.08);
+  --oja-shadow: 0 1px 3px 0 rgb(16 24 40 / 0.08), 0 4px 12px -2px rgb(16 24 40 / 0.08);
+  --oja-shadow-md: 0 4px 6px -1px rgb(16 24 40 / 0.08), 0 8px 24px -4px rgb(16 24 40 / 0.1);
+  --oja-shadow-lg: 0 8px 16px -4px rgb(16 24 40 / 0.1), 0 16px 40px -8px rgb(16 24 40 / 0.14);
+  --oja-shadow-xl: 0 16px 32px -8px rgb(16 24 40 / 0.14), 0 32px 64px -16px rgb(16 24 40 / 0.18);
+
+  /* Typography */
+  --oja-font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+    Roboto, Helvetica, Arial, sans-serif;
+  --oja-text-xs: 0.75rem;
+  --oja-text-sm: 0.8125rem;
+  --oja-text-base: 0.875rem;
+  --oja-text-lg: 1rem;
+  --oja-text-xl: 1.125rem;
+  --oja-text-2xl: 1.375rem;
+  --oja-text-3xl: 1.75rem;
+  --oja-text-4xl: 2.25rem;
+
+  /* Z-index scale */
+  --oja-z-dropdown: 1000;
+  --oja-z-overlay: 1100;
+  --oja-z-modal: 1200;
+  --oja-z-tooltip: 1300;
+  --oja-z-toast: 1400;
+}
+
+/* ============================================================
+   Base layer — apply tokens as Tailwind theme variables
+   ============================================================ */
+
+@theme inline {
+  --color-background: var(--oja-background);
+  --color-foreground: var(--oja-foreground);
+  --color-muted: var(--oja-muted);
+  --color-muted-foreground: var(--oja-muted-foreground);
+  --color-card: var(--oja-card);
+  --color-card-foreground: var(--oja-card-foreground);
+  --color-border: var(--oja-border);
+  --color-input: var(--oja-input);
+  --color-primary: var(--oja-primary);
+  --color-primary-hover: var(--oja-primary-hover);
+  --color-primary-foreground: var(--oja-primary-foreground);
+  --color-secondary: var(--oja-secondary);
+  --color-secondary-foreground: var(--oja-secondary-foreground);
+  --color-accent: var(--oja-accent);
+  --color-accent-foreground: var(--oja-accent-foreground);
+  --color-destructive: var(--oja-destructive);
+  --color-destructive-foreground: var(--oja-destructive-foreground);
+  --color-success: var(--oja-success);
+  --color-warning: var(--oja-warning);
+  --color-ring: var(--oja-ring);
+
+  --radius-sm: var(--oja-radius-sm);
+  --radius-md: var(--oja-radius-md);
+  --radius-lg: var(--oja-radius-lg);
+  --radius-xl: var(--oja-radius-xl);
+
+  --shadow-xs: var(--oja-shadow-xs);
+  --shadow-sm: var(--oja-shadow-sm);
+  --shadow-md: var(--oja-shadow-md);
+  --shadow-lg: var(--oja-shadow-lg);
+  --shadow-xl: var(--oja-shadow-xl);
+
+  --font-sans: var(--oja-font-sans);
+}
+
+/* ============================================================
+   Base element styles
+   ============================================================ */
+
+@layer base {
+  * {
+    border-color: var(--oja-border);
+  }
+
+  body {
+    background-color: var(--oja-background);
+    color: var(--oja-foreground);
+    font-family: var(--oja-font-sans);
+    font-size: var(--oja-text-base);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background-color: var(--oja-blue-100);
+    color: var(--oja-blue-900);
+  }
+}
+
+/* ============================================================
+   Focus ring
+   ============================================================ */
+
+:where(button, input, select, textarea, a, [role="button"], [tabindex]):focus-visible {
+  outline: 2px solid var(--oja-ring);
+  outline-offset: 2px;
+}
+
+/* ============================================================
+   Reduced motion
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
