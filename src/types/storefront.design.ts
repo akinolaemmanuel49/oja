@@ -262,6 +262,9 @@ export interface ProductImagesComponent extends BaseComponent {
     showThumbnails: boolean;
     thumbnailPosition: "bottom" | "left";
     zoomOnHover: boolean;
+    showNavigation: boolean; // prev/next arrows on the main image
+    showCounter: boolean; // "1 / 4" counter on the main image
+    zoomOnClick: "click" | "double-click" | "none"; // lightbox zoom behaviour
   };
 }
 

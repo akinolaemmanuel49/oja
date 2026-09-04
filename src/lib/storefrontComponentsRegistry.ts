@@ -188,7 +188,10 @@ export const COMPONENT_REGISTRY: Record<ComponentType, ComponentDefinition> = {
       mainImageAspect: "square",
       showThumbnails: true,
       thumbnailPosition: "bottom",
-      zoomOnHover: true,
+      zoomOnHover: false,
+      showNavigation: true,
+      showCounter: true,
+      zoomOnClick: "click",
     },
   },
 

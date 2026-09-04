@@ -1,4 +1,4 @@
-import { useState, useMemo, createContext, useContext, useEffect } from "react";
+import { useState, useMemo, useCallback, createContext, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import type {
@@ -13,6 +13,8 @@ import {
   ShoppingCart,
   ChevronLeft,
   ChevronRight,
+  X,
+  ZoomIn,
 } from "lucide-react";
 import { Button,Label,Select,SelectContent,SelectItem,SelectTrigger,SelectValue,Slider } from "@oja/ui";
 import { useStorefront } from "@/hooks/useStorefront";
@@ -1025,6 +1027,8 @@ export function ProductImagesRenderer({
 }) {
   const { data } = component;
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxIdx, setLightboxIdx] = useState(0);
   const { selectedVariantId } = useProductDetail();
 
   const images = useMemo(() => {
@@ -1046,6 +1050,26 @@ export function ProductImagesRenderer({
     setSelectedImageIndex(0);
   }, [selectedVariantId]);
 
+  const count = images.length;
+  const goTo = useCallback((index: number) => {
+    const n = images.length;
+    if (n === 0) return;
+    setSelectedImageIndex(((index % n) + n) % n);
+  }, [images.length]);
+
+  const prev = useCallback(() => {
+    goTo(selectedImageIndex - 1);
+  }, [goTo, selectedImageIndex]);
+
+  const next = useCallback(() => {
+    goTo(selectedImageIndex + 1);
+  }, [goTo, selectedImageIndex]);
+
+  const openLightbox = useCallback(() => {
+    setLightboxIdx(selectedImageIndex);
+    setLightboxOpen(true);
+  }, [selectedImageIndex]);
+
   const aspectMap = {
     square: "aspect-square",
     portrait: "aspect-[3/4]",
@@ -1053,8 +1077,46 @@ export function ProductImagesRenderer({
   };
 
   const br = getBorderRadius(theme.borderRadius);
+  const showThumbs = data.showThumbnails && count > 1;
+  const zoomOnClick = data.zoomOnClick !== "none";
+  const zoomAction =
+    data.zoomOnClick === "double-click" ? "onDoubleClick" : "onClick";
 
-  if (images.length === 0) {
+  // Keyboard navigation on the gallery (left/right arrows, Escape to close lightbox)
+  const onKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        prev();
+      } else if (e.key === "ArrowRight") {
+        e.preventDefault();
+        next();
+      }
+    },
+    [prev, next],
+  );
+
+  useEffect(() => {
+    if (!lightboxOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setLightboxOpen(false);
+      if (e.key === "ArrowLeft") prev();
+      if (e.key === "ArrowRight") next();
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [lightboxOpen, prev, next]);
+
+  useEffect(() => {
+    if (!lightboxOpen) return;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [lightboxOpen]);
+
+  if (count === 0) {
     return (
       <div className="px-4 md:px-8 py-8">
         <div
@@ -1070,74 +1132,179 @@ export function ProductImagesRenderer({
     );
   }
 
+  const thumbClass = (index: number) =>
+    cn(
+      "cursor-pointer border-2 overflow-hidden transition-all duration-150",
+      "aspect-square",
+      selectedImageIndex === index
+        ? "border-blue-500 opacity-100"
+        : "border-transparent opacity-60 hover:opacity-100 hover:border-gray-300",
+    );
+
+  const thumbs =
+    data.thumbnailPosition === "left" ? (
+      <div className="flex flex-col gap-2 w-16 md:w-20 shrink-0">
+        {images.map((img, i) => (
+          <button
+            key={i}
+            type="button"
+            aria-label={`View image ${i + 1}`}
+            onClick={() => setSelectedImageIndex(i)}
+            className={thumbClass(i)}
+            style={{ borderRadius: br }}
+          >
+            <img src={img} alt="" className="w-full h-full object-cover" />
+          </button>
+        ))}
+      </div>
+    ) : (
+      <div className="flex gap-2 mt-4 justify-center">
+        {images.map((img, i) => (
+          <button
+            key={i}
+            type="button"
+            aria-label={`View image ${i + 1}`}
+            onClick={() => setSelectedImageIndex(i)}
+            className={cn(thumbClass(i), "w-16 md:w-20")}
+            style={{ borderRadius: br }}
+          >
+            <img src={img} alt="" className="w-full h-full object-cover" />
+          </button>
+        ))}
+      </div>
+    );
+
+  const navArrow = (dir: "prev" | "next") => {
+    const Icon = dir === "prev" ? ChevronLeft : ChevronRight;
+    const disabled = !data.showNavigation || count <= 1;
+    const handler = dir === "prev" ? prev : next;
+    return (
+      <button
+        type="button"
+        aria-label={dir === "prev" ? "Previous image" : "Next image"}
+        disabled={disabled}
+        onClick={handler}
+        className={cn(
+          "absolute top-1/2 -translate-y-1/2 p-1.5 rounded-full",
+          "bg-white/80 hover:bg-white text-gray-700 shadow-sm transition",
+          "disabled:opacity-0 disabled:pointer-events-none",
+          dir === "prev" ? "left-2 md:left-3" : "right-2 md:right-3",
+        )}
+      >
+        <Icon className="h-5 w-5 md:h-6 md:w-6" />
+      </button>
+    );
+  };
+
   return (
     <div
       className={cn(
         "px-4 md:px-8 py-6 md:py-8 flex gap-4",
-        data.showThumbnails && data.thumbnailPosition === "left"
-          ? "flex-row"
-          : "flex-col",
+        showThumbs && data.thumbnailPosition === "left" ? "flex-row" : "flex-col",
       )}
+      onKeyDown={onKeyDown}
+      tabIndex={0}
+      style={{ outline: "none" }}
     >
-      {/* Thumbnails on left */}
-      {data.showThumbnails && data.thumbnailPosition === "left" && (
-        <div className="flex flex-col gap-2">
-          {images.map((img, i) => (
-            <div
-              key={i}
-              onClick={() => setSelectedImageIndex(i)}
-              className={cn(
-                "w-12 h-12 md:w-16 md:h-16 cursor-pointer border-2 overflow-hidden transition-colors",
-                selectedImageIndex === i
-                  ? "border-blue-400"
-                  : "border-gray-200 hover:border-gray-300",
-              )}
-              style={{ borderRadius: br }}
-            >
-              <img src={img} alt="" className="w-full h-full object-cover" />
-            </div>
-          ))}
-        </div>
-      )}
+      {showThumbs && data.thumbnailPosition === "left" && thumbs}
 
       {/* Main image */}
       <div
-        className={cn(
-          "flex-1 overflow-hidden relative",
-          data.zoomOnHover ? "group" : "",
-        )}
-        style={{ borderRadius: br, maxHeight: "600px" }} // max height to balance portrait
+        className={cn("flex-1 overflow-hidden relative", data.zoomOnHover ? "group" : "")}
+        style={{ borderRadius: br, maxHeight: "600px" }}
       >
-        <div className={cn(aspectMap[data.mainImageAspect], "h-full w-full")}>
+        <div className={cn(aspectMap[data.mainImageAspect], "h-full w-full bg-gray-50")}>
           <img
+            key={selectedImageIndex}
             src={images[selectedImageIndex]}
             alt={product?.product_name}
             className={cn(
-              "w-full h-full object-contain transition-transform",
+              "w-full h-full object-contain transition-transform duration-300",
               data.zoomOnHover && "group-hover:scale-110",
+              "[animation:fadeSlideIn_0.25s_ease]",
             )}
+            {...(zoomOnClick && zoomAction === "onDoubleClick"
+              ? { onDoubleClick: openLightbox }
+              : zoomOnClick
+                ? { onClick: openLightbox }
+                : {})}
           />
         </div>
+
+        {/* Image counter */}
+        {data.showCounter && count > 1 && (
+          <span className="absolute bottom-2 right-2 text-xs font-medium bg-black/60 text-white px-2 py-0.5 rounded-full">
+            {selectedImageIndex + 1} / {count}
+          </span>
+        )}
+
+        {/* Zoom hint */}
+        {zoomOnClick && (
+          <button
+            type="button"
+            aria-label="Zoom image"
+            onClick={openLightbox}
+            className="absolute top-2 right-2 p-1.5 rounded-full bg-white/80 hover:bg-white text-gray-700 shadow-sm transition"
+          >
+            <ZoomIn className="h-4 w-4 md:h-5 md:w-5" />
+          </button>
+        )}
+
+        {/* Prev / next arrows */}
+        {navArrow("prev")}
+        {navArrow("next")}
       </div>
 
-      {/* Thumbnails on bottom */}
-      {data.showThumbnails && data.thumbnailPosition === "bottom" && (
-        <div className="flex gap-2 flex-wrap mt-4 justify-center">
-          {images.map((img, i) => (
-            <div
-              key={i}
-              onClick={() => setSelectedImageIndex(i)}
-              className={cn(
-                "w-12 h-12 md:w-16 md:h-16 cursor-pointer border-2 overflow-hidden transition-colors",
-                selectedImageIndex === i
-                  ? "border-blue-400"
-                  : "border-gray-200 hover:border-gray-300",
-              )}
-              style={{ borderRadius: br }}
+      {showThumbs && data.thumbnailPosition === "bottom" && thumbs}
+
+      {/* Lightbox / zoom overlay */}
+      {lightboxOpen && (
+        <div className="fixed inset-0 z-[9999] bg-black/90 flex flex-col items-center justify-center">
+          <button
+            type="button"
+            aria-label="Close zoom"
+            onClick={() => setLightboxOpen(false)}
+            className="absolute top-4 right-4 text-white hover:text-gray-300 transition"
+          >
+            <X className="h-7 w-7" />
+          </button>
+
+          <div className="flex items-center gap-4 w-full max-w-5xl px-4">
+            <button
+              type="button"
+              aria-label="Previous image"
+              disabled={count <= 1}
+              onClick={prev}
+              className="text-white hover:text-gray-300 transition disabled:opacity-30"
             >
-              <img src={img} alt="" className="w-full h-full object-cover" />
+              <ChevronLeft className="h-10 w-10" />
+            </button>
+
+            <div className="flex-1 flex items-center justify-center">
+              <img
+                key={lightboxIdx}
+                src={images[lightboxIdx]}
+                alt={product?.product_name}
+                className="max-h-[85vh] max-w-full object-contain [animation:fadeIn_0.2s_ease]"
+              />
             </div>
-          ))}
+
+            <button
+              type="button"
+              aria-label="Next image"
+              disabled={count <= 1}
+              onClick={next}
+              className="text-white hover:text-gray-300 transition disabled:opacity-30"
+            >
+              <ChevronRight className="h-10 w-10" />
+            </button>
+          </div>
+
+          {data.showCounter && count > 1 && (
+            <span className="mt-4 text-sm text-gray-300">
+              {lightboxIdx + 1} / {count}
+            </span>
+          )}
         </div>
       )}
     </div>

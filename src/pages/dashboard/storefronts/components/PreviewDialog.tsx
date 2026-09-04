@@ -1,5 +1,5 @@
 import { Dialog,DialogContent,DialogTitle,Button,Select,SelectContent,SelectItem,SelectTrigger,SelectValue } from "@oja/ui";
-import { Monitor, Smartphone, Home, ShoppingBag, Package } from "lucide-react";
+import { Monitor, Smartphone, Home, ShoppingBag, Package, ExternalLink } from "lucide-react";
 import { useMemo, useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 
@@ -105,7 +105,23 @@ export function PreviewDialog({
           </DialogTitle>
 
           <div className="flex items-center gap-2">
-            <div className="flex items-center gap-0.5 bg-gray-100 rounded-md p-0.5 mr-4">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                const params = new URLSearchParams();
+                params.set("page", localPage);
+                if (selectedProductId) params.set("product", selectedProductId);
+                const url = `/storefronts/${design.storefrontId}/preview?${params.toString()}`;
+                window.open(url, "_blank", "noopener,noreferrer");
+              }}
+              title="Open preview in a new tab"
+            >
+              <ExternalLink className="h-4 w-4 mr-1.5" />
+              Open in new tab
+            </Button>
+
+            <div className="flex items-center gap-0.5 bg-gray-100 rounded-md p-0.5">
               <Button
                 variant={viewMode === "desktop" ? "default" : "ghost"}
                 size="sm"

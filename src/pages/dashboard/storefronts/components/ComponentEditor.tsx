@@ -1115,6 +1115,40 @@ function ProductImagesEditor({
           onCheckedChange={(c) => onUpdate({ zoomOnHover: c })}
         />
       </div>
+      <div className="flex items-center justify-between">
+        <Label>Prev / Next arrows</Label>
+        <Switch
+          className="bg-black data-[state=checked]:bg-black [&>span]:bg-white"
+          checked={data.showNavigation}
+          onCheckedChange={(c) => onUpdate({ showNavigation: c })}
+        />
+      </div>
+      <div className="flex items-center justify-between">
+        <Label>Image counter</Label>
+        <Switch
+          className="bg-black data-[state=checked]:bg-black [&>span]:bg-white"
+          checked={data.showCounter}
+          onCheckedChange={(c) => onUpdate({ showCounter: c })}
+        />
+      </div>
+      <div>
+        <Label>Click to zoom</Label>
+        <Select
+          value={data.zoomOnClick}
+          onValueChange={(v) =>
+            onUpdate({ zoomOnClick: v as typeof data.zoomOnClick })
+          }
+        >
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent className="bg-white">
+            <SelectItem value="click">Single click</SelectItem>
+            <SelectItem value="double-click">Double click</SelectItem>
+            <SelectItem value="none">Disabled</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
     </div>
   );
 }

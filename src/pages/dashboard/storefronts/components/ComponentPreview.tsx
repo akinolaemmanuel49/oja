@@ -1,4 +1,5 @@
 import type { PageComponent, ThemeConfig } from "@/types/storefront.design";
+import { cn } from "@/lib/utils";
 import {
   Package,
   Image as ImageIcon,
@@ -6,6 +7,8 @@ import {
   Filter,
   ShoppingCart,
   BookOpen,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 
 interface ComponentPreviewProps {
@@ -417,9 +420,20 @@ function ProductImagesPreview({
     <div className="flex gap-3">
       {/* Main image */}
       <div
-        className={`flex-1 bg-gray-200 rounded flex items-center justify-center ${aspectMap[data.mainImageAspect]}`}
+        className={`relative flex-1 bg-gray-200 rounded flex items-center justify-center ${aspectMap[data.mainImageAspect]}`}
       >
         <Package className="h-12 w-12 text-gray-400" />
+        {data.showNavigation && (
+          <>
+            <ChevronLeft className="absolute left-1.5 top-1/2 -translate-y-1/2 h-5 w-5 text-white bg-black/40 rounded-full p-0.5" />
+            <ChevronRight className="absolute right-1.5 top-1/2 -translate-y-1/2 h-5 w-5 text-white bg-black/40 rounded-full p-0.5" />
+          </>
+        )}
+        {data.showCounter && (
+          <span className="absolute bottom-1.5 right-1.5 text-[10px] font-medium bg-black/60 text-white px-1.5 py-0.5 rounded-full">
+            1 / 4
+          </span>
+        )}
       </div>
       {/* Thumbnail strip */}
       {data.showThumbnails && (
@@ -429,7 +443,10 @@ function ProductImagesPreview({
           {[1, 2, 3].map((i) => (
             <div
               key={i}
-              className="w-12 h-12 bg-gray-200 rounded border-2 border-white shadow-sm"
+              className={cn(
+                "w-12 h-12 bg-gray-200 rounded border-2 shadow-sm",
+                i === 0 ? "border-blue-400" : "border-white",
+              )}
             />
           ))}
         </div>

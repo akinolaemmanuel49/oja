@@ -1,6 +1,11 @@
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { AppHref } from "./constants";
 import { errorRoutes, protectedRoutes, publicRoutes } from "./config";
+import { lazy } from "react";
+
+const StorefrontPreviewPage = lazy(
+  () => import("@/pages/dashboard/storefronts/StorefrontPreviewPage"),
+);
 import { PermissionRoute } from "@/components/guards/PermissionRoute";
 import { ProtectedRoute } from "@/components/guards/ProtectedRoute";
 import { DashboardLayout } from "@/layouts/DashboardLayout";
@@ -53,6 +58,17 @@ export default function AppRoutes() {
                 />
               ))}
             </Route>
+
+            {/* Standalone full-screen storefront preview — renders OUTSIDE the
+                dashboard layout so it is never clipped by the main nav */}
+            <Route
+              path="/storefronts/:storeId/preview"
+              element={
+                <PermissionRoute permissions={["storefronts:update"]}>
+                  <StorefrontPreviewPage />
+                </PermissionRoute>
+              }
+            />
           </Route>
 
           {/* Error routes */}
