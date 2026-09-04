@@ -2,7 +2,9 @@ import { useState, useCallback, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
   DndContext,
+  DragOverlay,
   type DragEndEvent,
+  type DragStartEvent,
   closestCenter,
   PointerSensor,
   useSensor,
@@ -13,7 +15,7 @@ import {
   SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { Button } from "@/components/ui/button";
+import { Button } from "@oja/ui";
 import {
   ArrowLeft,
   Download,
@@ -40,6 +42,7 @@ import { PAGE_TYPE_LABELS } from "@/types/storefront.design";
 import { ComponentSidebar } from "./components/ComponentSidebar";
 import { CanvasArea } from "./components/CanvasArea";
 import { ComponentEditor } from "./components/ComponentEditor";
+import { ComponentPreview } from "./components/ComponentPreview";
 import { ThemeEditor } from "./components/ThemeEditor";
 import { PreviewDialog } from "./components/PreviewDialog";
 import {
@@ -48,7 +51,7 @@ import {
   createComponent,
 } from "@/lib/storefrontComponentsRegistry";
 import type { ErrorResponse } from "@/responses/error";
-import { toast } from "sonner";
+import { toast } from "@oja/ui";
 import { saveStorefrontDesign } from "@/api/storefronts/saveStorefrontDesign";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { fetchStorefrontDesign } from "@/api/storefronts/fetchStorefrontDesign";
@@ -119,6 +122,10 @@ export default function StorefrontDesigner() {
   const [showPreview, setShowPreview] = useState(false);
   const [showThemeEditor, setShowThemeEditor] = useState(false);
 
+  // Component currently being dragged (for the drag overlay)
+  const [dragOverComponent, setDragOverComponent] =
+    useState<PageComponent | null>(null);
+
   // Fetch existing design on mount
   const { data: existingDesign } = useQuery({
     queryKey: ["storefront-design", storeId!],
@@ -129,6 +136,7 @@ export default function StorefrontDesigner() {
   // Load existing design into state when it arrives
   useEffect(() => {
     if (existingDesign) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setTheme(existingDesign.theme);
       setPages({
         home: existingDesign.pages.home.components,
@@ -208,6 +216,7 @@ export default function StorefrontDesigner() {
 
   const handleDragEnd = useCallback(
     (event: DragEndEvent) => {
+      setDragOverComponent(null);
       const { active, over } = event;
       if (!over || active.id === over.id) return;
       setActiveComponents((items) => {
@@ -221,6 +230,15 @@ export default function StorefrontDesigner() {
     },
     [setActiveComponents],
   );
+
+  const handleDragStart = useCallback((event: DragStartEvent) => {
+    const dragged = activeComponents.find((c) => c.id === event.active.id);
+    setDragOverComponent(dragged ?? null);
+  }, [activeComponents]);
+
+  const handleDragCancel = useCallback(() => {
+    setDragOverComponent(null);
+  }, []);
 
   // ──────────────────────────────
   // COMPONENT CRUD
@@ -403,7 +421,10 @@ export default function StorefrontDesigner() {
   // ──────────────────────────────
 
   return (
-    <div className="h-screen flex flex-col bg-gray-50">
+    <div
+      className="h-screen flex flex-col bg-gray-50"
+      inert={showPreview ? true : undefined}
+    >
       {/* ── Top Header ── */}
       <header className="bg-white border-b px-4 py-3 flex items-center justify-between shrink-0">
         <div className="flex items-center gap-3">
@@ -542,9 +563,11 @@ export default function StorefrontDesigner() {
         {/* Canvas */}
         <div className="flex-1 overflow-auto p-6">
           <DndContext
-            sensors={sensors}
+            sensors={showPreview ? [] : sensors}
             collisionDetection={closestCenter}
+            onDragStart={handleDragStart}
             onDragEnd={handleDragEnd}
+            onDragCancel={handleDragCancel}
           >
             <SortableContext
               items={activeComponents.map((c) => c.id)}
@@ -561,6 +584,20 @@ export default function StorefrontDesigner() {
                 activePage={activePage}
               />
             </SortableContext>
+            <DragOverlay dropAnimation={null}>
+              {dragOverComponent ? (
+                <div className="w-[min(100vw-3rem,calc(100%-16rem))]">
+                  <div className="rounded-xl border border-blue-400 shadow-2xl bg-white overflow-hidden cursor-grabbing">
+                    <div className="p-4 bg-gray-50">
+                      <ComponentPreview
+                        component={dragOverComponent}
+                        theme={theme}
+                      />
+                    </div>
+                  </div>
+                </div>
+              ) : null}
+            </DragOverlay>
           </DndContext>
         </div>
 

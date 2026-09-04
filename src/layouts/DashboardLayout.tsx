@@ -1,10 +1,12 @@
 import { Navbar } from "@/components/DashboardNavbar";
 import { Sidebar } from "@/components/DashboardSidebar";
 import { useEffect, useState } from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
+import { AnimatePresence, motion } from "motion/react";
 
 export const DashboardLayout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
     if (isSidebarOpen) {
@@ -38,13 +40,26 @@ export const DashboardLayout = () => {
           `}
         >
           <div className="max-w-7xl mx-auto">
-            <Outlet />
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={location.pathname}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ type: "spring", damping: 25, stiffness: 300 }}
+              >
+                <Outlet />
+              </motion.div>
+            </AnimatePresence>
           </div>
         </main>
       </div>
 
       {isSidebarOpen && (
-        <div
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
           className="fixed inset-0 bg-black/90 z-20 lg:hidden"
           onClick={() => setIsSidebarOpen(false)}
         />

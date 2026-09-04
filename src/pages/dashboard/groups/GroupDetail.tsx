@@ -1,16 +1,7 @@
 import { useState, useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Button,Card,CardContent,CardDescription,CardHeader,CardTitle,Tabs,TabsContent,TabsList,TabsTrigger,Alert,AlertDescription,AlertDialog,AlertDialogAction,AlertDialogCancel,AlertDialogContent,AlertDialogDescription,AlertDialogFooter,AlertDialogHeader,AlertDialogTitle } from "@oja/ui";
 import {
   ArrowLeft,
   Users,
@@ -28,16 +19,6 @@ import { listGroupPermissions } from "@/api/groups/listGroupPermissions";
 import { removeUsersFromGroupMutationFn } from "@/api/groups/removeUsersFromGroup";
 import { revokePermissionsFromGroupMutationFn } from "@/api/groups/revokePermissionsFromGroup";
 import { AppHref } from "@/routes/constants";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
 import { AppLoader } from "@/components/loaders/AppLoader";
 
 export default function GroupDetail() {

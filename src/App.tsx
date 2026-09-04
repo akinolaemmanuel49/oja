@@ -1,7 +1,7 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter } from "react-router-dom";
 
-import { Toaster } from "@/components/ui/sonner";
+import { Toaster } from "@oja/ui";
 import { PermissionProvider } from "./contexts/PermissionContext";
 import AppRoutes from "@/routes/routes";
 

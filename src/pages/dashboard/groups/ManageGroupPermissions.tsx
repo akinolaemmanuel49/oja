@@ -1,18 +1,7 @@
 import { useState, useMemo } from "react";
 
 import { useNavigate, useParams } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Badge } from "@/components/ui/badge";
+import { Button,Input,Card,CardContent,CardDescription,CardHeader,CardTitle,Checkbox,Alert,AlertDescription,Badge } from "@oja/ui";
 import { ArrowLeft, Loader2, Search, ShieldPlus } from "lucide-react";
 import { fetchGroup } from "@/api/groups/fetchGroup";
 import { listAllPermissions } from "@/api/permissions/listAllPermissions";

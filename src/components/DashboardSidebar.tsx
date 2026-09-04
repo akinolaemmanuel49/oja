@@ -2,6 +2,7 @@ import { Home, Users, Package, Store, Group } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { PermissionGuard } from "@/components/guards/PermissionGuard";
 import { AppHref } from "@/routes/constants";
+import { motion } from "motion/react";
 
 type SidebarProps = {
   isOpen: boolean;
@@ -13,15 +14,12 @@ type NavItem = {
   label: string;
   href: string;
   ariaLabel: string;
-  /** Permission required to see this nav item (optional) */
   permission?: string;
 };
 
 export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
   const location = useLocation();
 
-  // Define navigation items with their required permissions
-  // Items without permission are visible to everyone
   const navItems: NavItem[] = [
     {
       icon: Home,
@@ -33,36 +31,32 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
       icon: Store,
       label: "Storefronts",
       href: AppHref.storefrontsRoute,
-      permission: "storefronts:read", // Only show if user can read storefronts
+      permission: "storefronts:read",
       ariaLabel: "Storefronts",
     },
     {
       icon: Package,
       label: "Products",
       href: AppHref.productsRoute,
-      permission: "products:read", // Only show if user can read products
+      permission: "products:read",
       ariaLabel: "Products",
     },
     {
       icon: Users,
       label: "Users",
       href: AppHref.usersRoute,
-      permission: "users:read", // Only show if user can read users
+      permission: "users:read",
       ariaLabel: "Users",
     },
     {
       icon: Group,
       label: "Groups",
       href: AppHref.groupsRoute,
-      permission: "groups:read", // Only show if user can read groups
+      permission: "groups:read",
       ariaLabel: "Groups",
     },
   ];
 
-  /**
-   * Helper to determine if a nav item is currently active.
-   * Exact match for home, prefix match for others.
-   */
   const isActive = (href: string) => {
     if (href === AppHref.dashboardHomeRoute) {
       return location.pathname === AppHref.dashboardHomeRoute;
@@ -70,9 +64,6 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
     return location.pathname.startsWith(href);
   };
 
-  /**
-   * Render a single nav item, wrapped in PermissionGuard if needed.
-   */
   const renderNavItem = (item: NavItem) => {
     const Icon = item.icon;
     const active = isActive(item.href);
@@ -83,21 +74,27 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
         aria-label={ariaLabel}
         to={item.href}
         className={`
-          flex items-center gap-3 px-3 py-2 rounded-lg transition-colors
-          ${
-            active
-              ? "bg-blue-50 text-blue-600"
-              : "hover:bg-gray-100 text-gray-700"
+          flex items-center gap-3 px-3 py-2 rounded-lg transition-colors relative
+          ${active
+            ? "bg-blue-50 text-blue-600"
+            : "hover:bg-gray-100 text-gray-700"
           }
         `}
-        onClick={onClose} // Close sidebar on mobile after click
+        onClick={onClose}
       >
+        {active && (
+          <motion.div
+            layoutId="sidebar-active-pill"
+            className="absolute inset-0 rounded-lg bg-blue-50"
+            transition={{ type: "spring", damping: 25, stiffness: 300 }}
+          />
+        )}
         <Icon
-          className={`h-5 w-5 shrink-0 ${active ? "text-blue-600" : "text-gray-600"}`}
+          className={`h-5 w-5 shrink-0 relative z-10 transition-colors duration-200 ${active ? "text-blue-600" : "text-gray-600"}`}
         />
         <span
           className={`
-            whitespace-nowrap transition-opacity duration-300
+            whitespace-nowrap transition-opacity duration-300 relative z-10
             ${isOpen ? "opacity-100" : "opacity-0 invisible"}
           `}
         >
@@ -106,7 +103,6 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
       </Link>
     );
 
-    // If item has permission requirement, wrap in PermissionGuard
     if (item.permission) {
       return (
         <PermissionGuard key={item.href} permission={item.permission}>
@@ -115,7 +111,6 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
       );
     }
 
-    // Otherwise, render directly
     return <div key={item.href}>{navLink}</div>;
   };
 

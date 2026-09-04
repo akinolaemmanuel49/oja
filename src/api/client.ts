@@ -1,25 +1,15 @@
 import { BASE_URL } from "@/config";
-import axios from "axios";
+import { createHttpClient } from "@oja/data";
 
-const apiClient = axios.create({
+const { instance, get, getList, post, put, patch, delete: del } = createHttpClient({
   baseURL: BASE_URL,
   withCredentials: true,
-  headers: { Accept: "application/json" },
 });
 
-apiClient.interceptors.response.use(
-  (response) => response,
-  async (error) => {
-    const originalRequest = error.config;
+// Backward-compatible default export: the raw axios instance.
+// Existing API modules rely on `const { data } = await apiClient.get(...)`.
+const apiClient = instance;
 
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
-
-      return Promise.reject(error);
-    }
-
-    return Promise.reject(error);
-  },
-);
+export { get, getList, post, put, patch, del };
 
 export default apiClient;

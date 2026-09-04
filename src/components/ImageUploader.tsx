@@ -1,9 +1,5 @@
 import { useState, useCallback } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
+import { Button,Input,Label,Card,CardContent,CardHeader,CardTitle,Progress } from "@oja/ui";
 import { Upload, ImageIcon, Trash2, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
 

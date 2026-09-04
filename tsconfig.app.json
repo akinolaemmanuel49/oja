@@ -9,10 +9,13 @@
     "skipLibCheck": true,
     "baseUrl": "./", // Base directory for resolving non-absolute module names.
     "paths": {
-      "@/*": ["src/*"], // Map "@/" to the "src/" folder.
-      "@components/*": ["src/components/*"], // Example for a specific folder.
-      "@utils/*": ["src/utils/*"], // Example for a specific folder.
-      "@pages/*": ["src/pages/*"], // Example for a specific folder.
+      "@/*": ["src/*"],
+      "@oja/motion-design": ["../packages/motion-design/src/index.ts"],
+      "@oja/motion-design/*": ["../packages/motion-design/src/*"],
+      "@oja/ui": ["../packages/ui/src/index.ts"],
+      "@oja/ui/*": ["../packages/ui/src/*"],
+      "@oja/data": ["../packages/data/src/index.ts"],
+      "@oja/data/*": ["../packages/data/src/*"]
     },
 
     /* Bundler mode */

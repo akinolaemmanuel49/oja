@@ -1,5 +1,5 @@
 import { useRef, useEffect } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@oja/ui";
 import {
   Bold,
   Italic,

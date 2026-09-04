@@ -1,17 +1,7 @@
 import { useState, useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Button,Input,Card,CardContent,CardDescription,CardHeader,CardTitle,Checkbox,Alert,AlertDescription } from "@oja/ui";
 import { ArrowLeft, Loader2, Search, UserPlus } from "lucide-react";
 import { fetchGroup } from "@/api/groups/fetchGroup";
 import { fetchUsers } from "@/api/users/fetchUsers";

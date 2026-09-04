@@ -1,24 +1,7 @@
 import { useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Button,Input,Label,Card,CardContent,CardDescription,CardHeader,CardTitle,Select,SelectContent,SelectItem,SelectTrigger,SelectValue,Alert,AlertDescription } from "@oja/ui";
 import { Loader2, ArrowLeft, Info } from "lucide-react";
 import { UpdateStorefrontMutationFn } from "@/api/storefronts/updateStorefront";
 import { fetchStorefront } from "@/api/storefronts/fetchStorefront";

@@ -1,14 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Button,Card,CardContent,CardDescription,CardHeader,CardTitle,Alert,AlertDescription } from "@oja/ui";
 import { ArrowLeft, Edit, Package, Loader2 } from "lucide-react";
 import { PermissionGuard } from "@/components/guards/PermissionGuard";
 import { usePermissions } from "@/hooks/usePermissions";

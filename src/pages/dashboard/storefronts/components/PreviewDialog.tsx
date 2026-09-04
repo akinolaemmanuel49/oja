@@ -1,15 +1,7 @@
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
+import { Dialog,DialogContent,DialogTitle,Button,Select,SelectContent,SelectItem,SelectTrigger,SelectValue } from "@oja/ui";
 import { Monitor, Smartphone, Home, ShoppingBag, Package } from "lucide-react";
 import { useMemo, useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
 import type {
   StorefrontDesign,

@@ -1,24 +1,6 @@
 import { useEffect } from "react";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Button,Input,Label,Textarea,Select,SelectContent,SelectItem,SelectTrigger,SelectValue,Card,CardContent,CardDescription,CardHeader,CardTitle,Alert,AlertDescription } from "@oja/ui";
 import { Loader2, ArrowLeft, Plus } from "lucide-react";
 import { ImageUploader } from "@/components/ImageUploader";
 import type { Product, CreateProduct, ProductUpdate } from "@/types/product";

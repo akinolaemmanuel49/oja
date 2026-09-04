@@ -4,7 +4,7 @@ import { fetchProduct } from "@/api/products/fetchProduct";
 import { updateProduct } from "@/api/products/updateProduct";
 import { AppLoader } from "@/components/loaders/AppLoader";
 import type { ProductUpdate } from "@/types/product";
-import { Button } from "@/components/ui/button";
+import { Button } from "@oja/ui";
 import { ProductForm } from "./components/ProductForm";
 import { AppHref } from "@/routes/constants";
 

@@ -1,16 +1,7 @@
 import { useState, useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Button,Card,CardContent,CardDescription,CardHeader,CardTitle,Tabs,TabsContent,TabsList,TabsTrigger,Alert,AlertDescription,AlertDialog,AlertDialogAction,AlertDialogCancel,AlertDialogContent,AlertDialogDescription,AlertDialogFooter,AlertDialogHeader,AlertDialogTitle } from "@oja/ui";
 import {
   ArrowLeft,
   Users,
@@ -32,16 +23,6 @@ import { listUserGroups } from "@/api/users/listUserGroups";
 import { removeUserFromGroupMutationFn } from "@/api/users/removeUserFromGroup";
 import { addUserToGroupMutationFn } from "@/api/users/addUserToGroup";
 import { fetchGroups } from "@/api/groups/fetchGroups";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
 import { AppLoader } from "@/components/loaders/AppLoader";
 
 export default function UserDetail() {

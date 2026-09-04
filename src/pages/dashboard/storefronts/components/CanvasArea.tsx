@@ -1,7 +1,6 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Card,Button } from "@oja/ui";
 import { GripVertical, Trash2, Copy, Settings } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -120,7 +119,7 @@ function SortableComponent({
     >
       <Card
         className={cn(
-          "cursor-pointer transition-all",
+          "cursor-pointer transition-shadow",
           isSelected && "shadow-lg",
           !isSelected && "hover:shadow-md",
         )}
