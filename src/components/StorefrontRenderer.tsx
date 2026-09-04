@@ -14,17 +14,17 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
+import { Button, Label } from "@oja/ui";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@oja/ui";
 import { useStorefront } from "@/hooks/useStorefront";
-import { Slider } from "@/components/ui/slider";
+import { Slider } from "@oja/ui";
+import { motion } from "motion/react";
 
 // ============================================================================
 // FILTER CONTEXT - Share filter state across components
@@ -257,7 +257,7 @@ export function StorefrontRenderer({
           ) : (
             <div className="text-center">
               <span className="text-sm text-blue-900">
-                Preview Mode â€¢ {storefrontProducts.length} products loaded â€¢{" "}
+                Preview Mode • {storefrontProducts.length} products loaded •{" "}
                 {filteredProducts.length} visible after filters
               </span>
             </div>
@@ -645,16 +645,27 @@ function ProductGridRenderer({
       ) : (
         <>
           <div className={`grid ${spacing} ${getColumnClass(data.columns)}`}>
-            {paginatedProducts.map((product) => (
-              <ProductCard
+            {paginatedProducts.map((product, i) => (
+              <motion.div
                 key={product.product_id}
-                product={product}
-                showPrice={data.showPrice}
-                showSku={data.showSku}
-                cardStyle={data.cardStyle}
-                theme={theme}
-                borderRadius={br}
-              />
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  delay: i * 0.04,
+                  type: "spring",
+                  damping: 25,
+                  stiffness: 300,
+                }}
+              >
+                <ProductCard
+                  product={product}
+                  showPrice={data.showPrice}
+                  showSku={data.showSku}
+                  cardStyle={data.cardStyle}
+                  theme={theme}
+                  borderRadius={br}
+                />
+              </motion.div>
             ))}
           </div>
 
@@ -832,11 +843,16 @@ function ProductCard({
   };
 
   return (
-    <div
+    <motion.div
       onClick={handleClick}
+      whileHover={
+        mode === "storefront"
+          ? { y: -6, transition: { type: "spring", damping: 20, stiffness: 300 } }
+          : undefined
+      }
       className={cn(
-        "group block overflow-hidden transition-all duration-200 bg-white",
-        mode === "storefront" && "cursor-pointer hover:-translate-y-1",
+        "group block overflow-hidden transition-shadow duration-200 bg-white",
+        mode === "storefront" && "cursor-pointer",
         mode === "preview" && "cursor-default",
         cardStyle === "bordered" && "border border-gray-200",
         cardStyle === "shadow" && "shadow-md hover:shadow-xl",
@@ -892,7 +908,7 @@ function ProductCard({
           </p>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 }
 

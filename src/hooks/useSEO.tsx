@@ -23,14 +23,12 @@ export function useSEO(slug: string, options: SEOOptions = {}) {
   useEffect(() => {
     if (!storefront) return;
 
-    // Default values from storefront
     const defaultTitle = storefront.name || "Store";
     const defaultDescription =
       storefront.design_config?.pages.home.meta.description || "";
-    const defaultImage = "";
+    const defaultImage = (storefront.design_config?.pages.home.meta as Record<string, unknown>)?.image as string || "";
     const defaultUrl = getStorefrontUrl(slug);
 
-    // Merge with page-specific options
     const title = options.title || defaultTitle;
     const description = options.description || defaultDescription;
     const image = options.image || defaultImage;
@@ -60,7 +58,6 @@ export function useSEO(slug: string, options: SEOOptions = {}) {
       meta.setAttribute("content", content);
     };
 
-    // Helper to remove meta tags
     const removeMetaTag = (name: string, property?: boolean) => {
       const selector = property
         ? `meta[property="${name}"]`
@@ -69,32 +66,32 @@ export function useSEO(slug: string, options: SEOOptions = {}) {
       if (meta) meta.remove();
     };
 
-    // Update basic meta tags
+    // Basic meta tags
     setMetaTag("description", description);
+    setMetaTag("viewport", "width=device-width, initial-scale=1.0");
+    setMetaTag("theme-color", "#2563EB");
 
-    // Update Open Graph tags
+    // Open Graph tags
     setMetaTag("og:title", title, true);
     setMetaTag("og:description", description, true);
-    setMetaTag("og:image", image, true);
-    setMetaTag("og:url", url, true);
     setMetaTag("og:type", type, true);
-    setMetaTag("og:site_name", storefront.name || "Store", true);
+    setMetaTag("og:url", url, true);
+    setMetaTag("og:site_name", `${storefront.name || "Store"} — powered by Ọjà`, true);
+    if (image) setMetaTag("og:image", image, true);
+    setMetaTag("og:locale", "en_NG", true);
 
-    // Update Twitter Card tags
-    setMetaTag("twitter:card", "summary_large_image");
+    // Twitter Card tags
+    setMetaTag("twitter:card", image ? "summary_large_image" : "summary");
     setMetaTag("twitter:title", title);
     setMetaTag("twitter:description", description);
-    setMetaTag("twitter:image", image);
+    if (image) setMetaTag("twitter:image", image);
 
-    // Update keywords
-    if (keywords.length > 0) {
-      setMetaTag("keywords", keywords.join(", "));
-    }
+    // Keywords
+    const allKeywords = ["shop", storefront.name, "online store", ...keywords];
+    setMetaTag("keywords", [...new Set(allKeywords)].join(", "));
 
-    // Update canonical URL
-    let canonical = document.querySelector(
-      'link[rel="canonical"]',
-    ) as HTMLLinkElement;
+    // Canonical URL
+    let canonical = document.querySelector('link[rel="canonical"]') as HTMLLinkElement;
     if (!canonical) {
       canonical = document.createElement("link");
       canonical.setAttribute("rel", "canonical");
@@ -102,35 +99,11 @@ export function useSEO(slug: string, options: SEOOptions = {}) {
     }
     canonical.setAttribute("href", url);
 
-    // // Update favicon
-    // if (storefront.faviconUrl) {
-    //   let favicon = document.querySelector(
-    //     'link[rel="icon"]',
-    //   ) as HTMLLinkElement;
-    //   if (!favicon) {
-    //     favicon = document.createElement("link");
-    //     favicon.setAttribute("rel", "icon");
-    //     document.head.appendChild(favicon);
-    //   }
-    //   favicon.setAttribute("href", storefront.faviconUrl);
-    // }
-
-    // // Update theme color
-    // if (storefront.themeColor) {
-    //   setMetaTag("theme-color", storefront.themeColor);
-    // }
-
-    // Handle no-index
+    // Robots
     if (options.noIndex) {
       setMetaTag("robots", "noindex, nofollow");
     } else {
       removeMetaTag("robots");
     }
-
-    // Cleanup function
-    return () => {
-      // Optionally remove tags on unmount
-      // We keep them since the page is navigating away anyway
-    };
   }, [storefront, slug, options]);
 }

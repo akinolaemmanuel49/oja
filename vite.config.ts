@@ -16,6 +16,9 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+      "@oja/motion-design": path.resolve(__dirname, "../packages/motion-design/src"),
+      "@oja/ui": path.resolve(__dirname, "../packages/ui/src"),
+      "@oja/data": path.resolve(__dirname, "../packages/data/src"),
     },
   },
 });

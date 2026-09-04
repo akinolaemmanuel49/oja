@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "motion/react";
 
 const heroImages = [
   "https://res.cloudinary.com/dikkedkzf/image/upload/v1771089909/Screenshot_61_q8mwz2.png",
@@ -9,37 +10,40 @@ const heroImages = [
 export default function HeroCarousel() {
   const [current, setCurrent] = useState(0);
 
-  // Auto slide every 3 seconds
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrent((prev) => (prev + 1) % heroImages.length);
-    }, 3000);
-
+    }, 4000);
     return () => clearInterval(timer);
   }, []);
 
   return (
-    <div className="mt-20 max-w-5xl mx-auto relative overflow-hidden rounded-xl shadow-2xl border border-gray-200 h-150 md:h-175">
-      {heroImages.map((img, idx) => (
-        <img
-          key={idx}
-          src={img}
-          alt={`App Preview ${idx + 1}`}
-          className={`w-full h-full object-contain transition-opacity duration-1000 rounded-xl ${
-            idx === current ? "opacity-100" : "opacity-0 absolute inset-0"
-          }`}
+    <div className="mt-20 max-w-5xl mx-auto relative overflow-hidden rounded-xl shadow-2xl border border-gray-200 h-150 md:h-175 bg-gray-100">
+      <AnimatePresence mode="wait">
+        <motion.img
+          key={current}
+          src={heroImages[current]}
+          alt={`App Preview ${current + 1}`}
+          initial={{ opacity: 0, scale: 1.02 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.98 }}
+          transition={{ duration: 0.6, ease: "easeInOut" }}
+          className="w-full h-full object-contain rounded-xl"
         />
-      ))}
+      </AnimatePresence>
 
       {/* Indicators */}
       <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex gap-3">
         {heroImages.map((_, idx) => (
-          <span
+          <motion.button
             key={idx}
-            className={`w-4 h-4 rounded-full transition-colors ${
-              idx === current ? "bg-blue-600" : "bg-gray-300"
+            onClick={() => setCurrent(idx)}
+            whileHover={{ scale: 1.3 }}
+            className={`w-3 h-3 rounded-full transition-colors ${
+              idx === current ? "bg-blue-600" : "bg-white/60"
             }`}
-          ></span>
+            aria-label={`Go to slide ${idx + 1}`}
+          />
         ))}
       </div>
     </div>

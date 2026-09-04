@@ -1,7 +1,7 @@
 import { lazy, useEffect, useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { Toaster } from "@/components/ui/sonner";
+import { Toaster } from "@oja/ui";
 
 // Pages
 const StorefrontHomePage = lazy(() => import("./pages/StorefrontHome"));
