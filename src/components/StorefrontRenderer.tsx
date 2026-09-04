@@ -1136,7 +1136,7 @@ export function ProductImagesRenderer({
       <div className="px-4 md:px-8 py-8">
         <div
           className={cn(
-            "bg-gray-200 flex items-center justify-center w-full max-w-full",
+            "bg-gray-200 flex items-center justify-center w-full max-w-3xl mx-auto max-h-[70vh] overflow-hidden",
             aspectMap[data.mainImageAspect],
           )}
           style={{ borderRadius: br }}
@@ -1214,7 +1214,7 @@ export function ProductImagesRenderer({
   return (
     <div
       className={cn(
-        "px-4 md:px-8 py-6 md:py-8 flex gap-4",
+        "px-4 md:px-8 py-6 md:py-8 w-full max-w-3xl mx-auto flex gap-4",
         showThumbs && data.thumbnailPosition === "left" ? "flex-row" : "flex-col",
       )}
       onKeyDown={onKeyDown}
@@ -1226,7 +1226,7 @@ export function ProductImagesRenderer({
       {/* Main image */}
       <div
         className={cn("flex-1 overflow-hidden relative", data.zoomOnHover ? "group" : "")}
-        style={{ borderRadius: br, maxHeight: "600px" }}
+        style={{ borderRadius: br, maxHeight: "min(520px, 70vh)" }}
       >
         <div className={cn(aspectMap[data.mainImageAspect], "h-full w-full bg-gray-50")}>
           <img
