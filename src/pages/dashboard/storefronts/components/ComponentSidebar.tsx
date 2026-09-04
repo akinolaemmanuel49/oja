@@ -51,11 +51,11 @@ export function ComponentSidebar({
   const components = getComponentsForPage(activePage);
 
   return (
-    <div className="w-64 bg-white border-r overflow-auto shrink-0">
-      <div className="p-4">
-        <div className="mb-4">
+    <div className="w-full md:w-64 bg-white border-b md:border-b-0 md:border-r overflow-auto shrink-0">
+      <div className="p-3 md:p-4">
+        <div className="mb-3 md:mb-4">
           <h2 className="text-base font-bold">Components</h2>
-          <p className="text-xs text-gray-500 mt-0.5">
+          <p className="text-xs text-gray-500 mt-0.5 hidden md:block">
             For the{" "}
             <span className="font-medium text-gray-700">
               {PAGE_TYPE_LABELS[activePage]}
@@ -64,16 +64,16 @@ export function ComponentSidebar({
           </p>
         </div>
 
-        <div className="space-y-2">
+        <div className="flex gap-2 md:flex-col md:gap-2 overflow-x-auto md:overflow-visible pb-1 md:pb-0">
           {components.map((component) => {
             const Icon = ICON_MAP[component.icon] ?? Sparkles;
             return (
               <Card
                 key={component.type}
-                className="cursor-pointer hover:shadow-md transition-shadow"
+                className="cursor-pointer hover:shadow-md transition-shadow shrink-0 w-48 md:w-auto"
                 onClick={() => onAddComponent(component.type)}
               >
-                <CardContent className="p-3">
+                <CardContent className="p-2.5 md:p-3">
                   <div className="flex items-start gap-3">
                     <div className="p-1.5 bg-blue-50 rounded shrink-0">
                       <Icon className="h-4 w-4 text-blue-600" />
@@ -82,7 +82,7 @@ export function ComponentSidebar({
                       <h3 className="font-medium text-sm leading-tight">
                         {component.label}
                       </h3>
-                      <p className="text-xs text-gray-500 mt-0.5 line-clamp-2">
+                      <p className="text-xs text-gray-500 mt-0.5 line-clamp-2 hidden md:block">
                         {component.description}
                       </p>
                     </div>
@@ -93,7 +93,7 @@ export function ComponentSidebar({
           })}
         </div>
 
-        <div className="mt-5 p-3 bg-blue-50 rounded-lg">
+        <div className="mt-5 p-3 bg-blue-50 rounded-lg hidden md:block">
           <p className="font-medium text-xs mb-1.5">💡 Tips</p>
           <ul className="text-xs text-gray-600 space-y-1">
             <li>• Click to add a component</li>

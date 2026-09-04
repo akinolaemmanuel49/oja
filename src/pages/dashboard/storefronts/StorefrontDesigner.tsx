@@ -426,7 +426,7 @@ export default function StorefrontDesigner() {
       inert={showPreview ? true : undefined}
     >
       {/* ── Top Header ── */}
-      <header className="bg-white border-b px-4 py-3 flex items-center justify-between shrink-0">
+      <header className="bg-white border-b px-4 py-2.5 md:py-3 flex items-center justify-between flex-wrap gap-y-2 shrink-0">
         <div className="flex items-center gap-3">
           <Button variant="ghost" size="sm" onClick={() => navigate(-1)}>
             <ArrowLeft className="h-4 w-4 mr-1" />
@@ -443,7 +443,7 @@ export default function StorefrontDesigner() {
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap justify-end">
           {/* Desktop / Mobile toggle */}
           <div className="flex items-center gap-0.5 bg-gray-100 rounded-md p-0.5">
             <Button
@@ -519,7 +519,7 @@ export default function StorefrontDesigner() {
 
       {/* ── Page Switcher Tabs ── */}
       <div className="bg-white border-b px-4 shrink-0">
-        <nav className="flex gap-1" aria-label="Page tabs">
+        <nav className="flex gap-1 overflow-x-auto" aria-label="Page tabs">
           {PAGE_TABS.map((tab) => {
             const isActive = activePage === tab.type;
             const count = pages[tab.type].length;
@@ -528,7 +528,7 @@ export default function StorefrontDesigner() {
                 key={tab.type}
                 onClick={() => handlePageSwitch(tab.type)}
                 className={[
-                  "flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-colors",
+                  "flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-colors whitespace-nowrap shrink-0",
                   isActive
                     ? "border-blue-500 text-blue-600"
                     : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300",
@@ -553,7 +553,7 @@ export default function StorefrontDesigner() {
       </div>
 
       {/* ── Main Area ── */}
-      <div className="flex-1 flex overflow-hidden">
+      <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
         {/* Sidebar — only shows components allowed for the active page */}
         <ComponentSidebar
           activePage={activePage}
@@ -561,7 +561,7 @@ export default function StorefrontDesigner() {
         />
 
         {/* Canvas */}
-        <div className="flex-1 overflow-auto p-6">
+        <div className="flex-1 overflow-auto p-4 md:p-6">
           <DndContext
             sensors={showPreview ? [] : sensors}
             collisionDetection={closestCenter}
@@ -602,7 +602,14 @@ export default function StorefrontDesigner() {
         </div>
 
         {/* Right panel */}
-        <div className="w-80 bg-white border-l overflow-auto shrink-0">
+        <div
+          className={[
+            "bg-white overflow-auto shrink-0",
+            "w-full fixed inset-x-0 bottom-0 z-40 h-[65vh] border-t md:border-t-0 shadow-[0_-12px_32px_rgba(0,0,0,0.12)]",
+            "md:static md:w-80 md:h-auto md:border-l md:shadow-none",
+            selectedComponent || showThemeEditor ? "block" : "hidden md:block",
+          ].join(" ")}
+        >
           {selectedComponent ? (
             <ComponentEditor
               component={selectedComponent}
