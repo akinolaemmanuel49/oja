@@ -2,6 +2,9 @@
 @import "tailwindcss";
 @import "@oja/ui/styles.css";
 
+/* Scan @oja/ui component sources so Tailwind generates their utility classes */
+@source "../../packages/ui/src";
+
 /* ============================================================
    Ọjà Design System — Design Tokens
    ============================================================ */

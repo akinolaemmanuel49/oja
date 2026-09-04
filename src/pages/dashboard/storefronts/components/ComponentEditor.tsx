@@ -227,7 +227,7 @@ function HeroEditor({
         <div className="flex items-center justify-between mb-2">
           <Label>Overlay</Label>
           <Switch
-            className="bg-black data-[state=checked]:bg-black [&>span]:bg-white"
+            className="bg-gray-300 data-[state=checked]:bg-black [&>span]:bg-white"
             checked={data.overlay?.enabled ?? false}
             onCheckedChange={(checked) =>
               onUpdate({
@@ -282,7 +282,7 @@ function HeroEditor({
         <div className="flex items-center justify-between mb-2">
           <Label>CTA Button</Label>
           <Switch
-            className="bg-black data-[state=checked]:bg-black [&>span]:bg-white"
+            className="bg-gray-300 data-[state=checked]:bg-black [&>span]:bg-white"
             checked={data.cta?.enabled ?? false}
             onCheckedChange={(checked) =>
               onUpdate({
@@ -425,7 +425,7 @@ function BannerEditor({
       <div className="flex items-center justify-between">
         <Label>Auto-play</Label>
         <Switch
-          className="bg-black data-[state=checked]:bg-black [&>span]:bg-white"
+          className="bg-gray-300 data-[state=checked]:bg-black [&>span]:bg-white"
           checked={data.autoPlay}
           onCheckedChange={(c) => onUpdate({ autoPlay: c })}
         />
@@ -446,7 +446,7 @@ function BannerEditor({
       <div className="flex items-center justify-between">
         <Label>Show Dots</Label>
         <Switch
-          className="bg-black data-[state=checked]:bg-black [&>span]:bg-white"
+          className="bg-gray-300 data-[state=checked]:bg-black [&>span]:bg-white"
           checked={data.showDots}
           onCheckedChange={(c) => onUpdate({ showDots: c })}
         />
@@ -454,7 +454,7 @@ function BannerEditor({
       <div className="flex items-center justify-between">
         <Label>Show Arrows</Label>
         <Switch
-          className="bg-black data-[state=checked]:bg-black [&>span]:bg-white"
+          className="bg-gray-300 data-[state=checked]:bg-black [&>span]:bg-white"
           checked={data.showArrows}
           onCheckedChange={(c) => onUpdate({ showArrows: c })}
         />
@@ -651,7 +651,7 @@ function ProductGridEditor({
       <div className="flex items-center justify-between">
         <Label>Show Price</Label>
         <Switch
-          className="bg-black data-[state=checked]:bg-black [&>span]:bg-white"
+          className="bg-gray-300 data-[state=checked]:bg-black [&>span]:bg-white"
           checked={data.showPrice}
           onCheckedChange={(c) => onUpdate({ showPrice: c })}
         />
@@ -659,7 +659,7 @@ function ProductGridEditor({
       <div className="flex items-center justify-between">
         <Label>Show SKU</Label>
         <Switch
-          className="bg-black data-[state=checked]:bg-black [&>span]:bg-white"
+          className="bg-gray-300 data-[state=checked]:bg-black [&>span]:bg-white"
           checked={data.showSku}
           onCheckedChange={(c) => onUpdate({ showSku: c })}
         />
@@ -725,7 +725,7 @@ function ProductCarouselEditor({
       <div className="flex items-center justify-between">
         <Label>Auto-play</Label>
         <Switch
-          className="bg-black data-[state=checked]:bg-black [&>span]:bg-white"
+          className="bg-gray-300 data-[state=checked]:bg-black [&>span]:bg-white"
           checked={data.autoPlay}
           onCheckedChange={(c) => onUpdate({ autoPlay: c })}
         />
@@ -746,7 +746,7 @@ function ProductCarouselEditor({
       <div className="flex items-center justify-between">
         <Label>Show Price</Label>
         <Switch
-          className="bg-black data-[state=checked]:bg-black [&>span]:bg-white"
+          className="bg-gray-300 data-[state=checked]:bg-black [&>span]:bg-white"
           checked={data.showPrice}
           onCheckedChange={(c) => onUpdate({ showPrice: c })}
         />
@@ -754,7 +754,7 @@ function ProductCarouselEditor({
       <div className="flex items-center justify-between">
         <Label>Show SKU</Label>
         <Switch
-          className="bg-black data-[state=checked]:bg-black [&>span]:bg-white"
+          className="bg-gray-300 data-[state=checked]:bg-black [&>span]:bg-white"
           checked={data.showSku}
           onCheckedChange={(c) => onUpdate({ showSku: c })}
         />
@@ -956,7 +956,7 @@ function ProductsHeaderEditor({
       <div className="flex items-center justify-between">
         <Label>Show Result Count</Label>
         <Switch
-          className="bg-black data-[state=checked]:bg-black [&>span]:bg-white"
+          className="bg-gray-300 data-[state=checked]:bg-black [&>span]:bg-white"
           checked={data.showResultCount}
           onCheckedChange={(c) => onUpdate({ showResultCount: c })}
         />
@@ -964,7 +964,7 @@ function ProductsHeaderEditor({
       <div className="flex items-center justify-between">
         <Label>Show Sort Dropdown</Label>
         <Switch
-          className="bg-black data-[state=checked]:bg-black [&>span]:bg-white"
+          className="bg-gray-300 data-[state=checked]:bg-black [&>span]:bg-white"
           checked={data.showSortDropdown}
           onCheckedChange={(c) => onUpdate({ showSortDropdown: c })}
         />
@@ -987,7 +987,7 @@ function ProductsFilterBarEditor({
       <div className="flex items-center justify-between">
         <Label>Price Filter</Label>
         <Switch
-          className="bg-black data-[state=checked]:bg-black [&>span]:bg-white"
+          className="bg-gray-300 data-[state=checked]:bg-black [&>span]:bg-white"
           checked={data.showPriceFilter}
           onCheckedChange={(c) => onUpdate({ showPriceFilter: c })}
         />
@@ -995,7 +995,7 @@ function ProductsFilterBarEditor({
       <div className="flex items-center justify-between">
         <Label>Type Filter (simple/variable)</Label>
         <Switch
-          className="bg-black data-[state=checked]:bg-black [&>span]:bg-white"
+          className="bg-gray-300 data-[state=checked]:bg-black [&>span]:bg-white"
           checked={data.showTypeFilter}
           onCheckedChange={(c) => onUpdate({ showTypeFilter: c })}
         />
@@ -1020,7 +1020,7 @@ function ProductsFilterBarEditor({
       <div className="flex items-center justify-between">
         <Label>Sticky on scroll</Label>
         <Switch
-          className="bg-black data-[state=checked]:bg-black [&>span]:bg-white"
+          className="bg-gray-300 data-[state=checked]:bg-black [&>span]:bg-white"
           checked={data.sticky}
           onCheckedChange={(c) => onUpdate({ sticky: c })}
         />
@@ -1081,7 +1081,7 @@ function ProductImagesEditor({
       <div className="flex items-center justify-between">
         <Label>Show Thumbnails</Label>
         <Switch
-          className="bg-black data-[state=checked]:bg-black [&>span]:bg-white"
+          className="bg-gray-300 data-[state=checked]:bg-black [&>span]:bg-white"
           checked={data.showThumbnails}
           onCheckedChange={(c) => onUpdate({ showThumbnails: c })}
         />
@@ -1110,7 +1110,7 @@ function ProductImagesEditor({
       <div className="flex items-center justify-between">
         <Label>Zoom on hover</Label>
         <Switch
-          className="bg-black data-[state=checked]:bg-black [&>span]:bg-white"
+          className="bg-gray-300 data-[state=checked]:bg-black [&>span]:bg-white"
           checked={data.zoomOnHover}
           onCheckedChange={(c) => onUpdate({ zoomOnHover: c })}
         />
@@ -1118,7 +1118,7 @@ function ProductImagesEditor({
       <div className="flex items-center justify-between">
         <Label>Prev / Next arrows</Label>
         <Switch
-          className="bg-black data-[state=checked]:bg-black [&>span]:bg-white"
+          className="bg-gray-300 data-[state=checked]:bg-black [&>span]:bg-white"
           checked={data.showNavigation}
           onCheckedChange={(c) => onUpdate({ showNavigation: c })}
         />
@@ -1126,7 +1126,7 @@ function ProductImagesEditor({
       <div className="flex items-center justify-between">
         <Label>Image counter</Label>
         <Switch
-          className="bg-black data-[state=checked]:bg-black [&>span]:bg-white"
+          className="bg-gray-300 data-[state=checked]:bg-black [&>span]:bg-white"
           checked={data.showCounter}
           onCheckedChange={(c) => onUpdate({ showCounter: c })}
         />
@@ -1191,7 +1191,7 @@ function ProductInfoEditor({
       <div className="flex items-center justify-between">
         <Label>Show SKU</Label>
         <Switch
-          className="bg-black data-[state=checked]:bg-black [&>span]:bg-white"
+          className="bg-gray-300 data-[state=checked]:bg-black [&>span]:bg-white"
           checked={data.showSku}
           onCheckedChange={(c) => onUpdate({ showSku: c })}
         />
@@ -1199,7 +1199,7 @@ function ProductInfoEditor({
       <div className="flex items-center justify-between">
         <Label>Show Stock Status</Label>
         <Switch
-          className="bg-black data-[state=checked]:bg-black [&>span]:bg-white"
+          className="bg-gray-300 data-[state=checked]:bg-black [&>span]:bg-white"
           checked={data.showStockStatus}
           onCheckedChange={(c) => onUpdate({ showStockStatus: c })}
         />
@@ -1207,7 +1207,7 @@ function ProductInfoEditor({
       <div className="flex items-center justify-between">
         <Label>Show Variant Selector</Label>
         <Switch
-          className="bg-black data-[state=checked]:bg-black [&>span]:bg-white"
+          className="bg-gray-300 data-[state=checked]:bg-black [&>span]:bg-white"
           checked={data.showVariantSelector}
           onCheckedChange={(c) => onUpdate({ showVariantSelector: c })}
         />
@@ -1236,7 +1236,7 @@ function ProductInfoEditor({
       <div className="flex items-center justify-between">
         <Label>Show Quantity Selector</Label>
         <Switch
-          className="bg-black data-[state=checked]:bg-black [&>span]:bg-white"
+          className="bg-gray-300 data-[state=checked]:bg-black [&>span]:bg-white"
           checked={data.showQuantitySelector}
           onCheckedChange={(c) => onUpdate({ showQuantitySelector: c })}
         />
@@ -1244,7 +1244,7 @@ function ProductInfoEditor({
       <div className="flex items-center justify-between">
         <Label>Show Share Buttons</Label>
         <Switch
-          className="bg-black data-[state=checked]:bg-black [&>span]:bg-white"
+          className="bg-gray-300 data-[state=checked]:bg-black [&>span]:bg-white"
           checked={data.showShareButtons}
           onCheckedChange={(c) => onUpdate({ showShareButtons: c })}
         />
@@ -1318,7 +1318,7 @@ function ProductTabsEditor({
               {/* Tab header row */}
               <div className="flex items-center gap-2 p-2 bg-gray-50">
                 <Switch
-                  className="bg-black data-[state=checked]:bg-black [&>span]:bg-white"
+                  className="bg-gray-300 data-[state=checked]:bg-black [&>span]:bg-white"
                   checked={tab.enabled}
                   onCheckedChange={(c) => updateTab(tab.id, { enabled: c })}
                 />
