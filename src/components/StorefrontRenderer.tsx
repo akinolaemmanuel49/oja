@@ -626,11 +626,11 @@ function ProductGridRenderer({
 
   // Responsive column classes
   const getColumnClass = (columns: number) => {
-    // Mobile: 2 columns, Tablet: 3-4 columns, Desktop: configured columns
-    if (columns <= 3) return "grid-cols-2 md:grid-cols-3";
-    if (columns === 4) return "grid-cols-2 sm:grid-cols-3 lg:grid-cols-4";
-    if (columns === 5) return "grid-cols-2 sm:grid-cols-3 lg:grid-cols-5";
-    return "grid-cols-2 sm:grid-cols-3 lg:grid-cols-6";
+    // Mobile: 1 column, Tablet: 2-3 columns, Desktop: configured columns
+    if (columns <= 3) return "grid-cols-1 sm:grid-cols-2 md:grid-cols-3";
+    if (columns === 4) return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4";
+    if (columns === 5) return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-5";
+    return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-6";
   };
 
   return (
@@ -777,8 +777,8 @@ function RelatedProductsRenderer({
 
   // Responsive columns
   const getColumnClass = (columns: number) => {
-    if (columns <= 3) return "grid-cols-2 md:grid-cols-3";
-    return "grid-cols-2 sm:grid-cols-3 lg:grid-cols-4";
+    if (columns <= 3) return "grid-cols-1 sm:grid-cols-2 md:grid-cols-3";
+    return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4";
   };
 
   return (
@@ -1215,7 +1215,9 @@ export function ProductImagesRenderer({
     <div
       className={cn(
         "px-4 md:px-8 py-6 md:py-8 w-full max-w-3xl mx-auto flex gap-4",
-        showThumbs && data.thumbnailPosition === "left" ? "flex-row" : "flex-col",
+        showThumbs && data.thumbnailPosition === "left"
+          ? "flex-col sm:flex-row"
+          : "flex-col",
       )}
       onKeyDown={onKeyDown}
       tabIndex={0}
