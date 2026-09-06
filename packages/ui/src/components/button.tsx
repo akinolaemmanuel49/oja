@@ -34,12 +34,12 @@ const variantClasses: Record<Variant, string> = {
 };
 
 const sizeClasses: Record<Size, string> = {
-  xs: "h-7 px-2.5 text-xs gap-1.5",
-  sm: "h-8 px-3 text-sm gap-1.5",
-  default: "h-9 px-4 text-sm gap-2",
-  lg: "h-11 px-6 text-base gap-2",
-  icon: "h-9 w-9",
-  "icon-sm": "h-8 w-8",
+  xs: "h-8 px-2.5 text-xs gap-1.5",
+  sm: "h-10 px-3 text-sm gap-1.5",
+  default: "h-12 px-4 text-sm gap-2",
+  lg: "h-14 px-6 text-base gap-2",
+  icon: "h-12 w-12",
+  "icon-sm": "h-10 w-10",
 };
 
 const baseClasses =
