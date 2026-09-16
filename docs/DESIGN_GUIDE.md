@@ -153,6 +153,10 @@ oja-storefront/src/
     motion/           — (re-exports from @oja/motion-design for convenience)
 ```
 
+> All three apps live in a single monorepo (`oja/`) with one root `package.json`
+> workspace and a single dependency lockfile; `@oja/ui`, `@oja/data`, and
+> `@oja/motion-design` are shared workspace packages under `packages/`.
+
 ---
 
 ## Accessibility

@@ -2,7 +2,7 @@
 
 Ọjà (Yorùbá for "market" or "marketplace") is a full-stack personal portfolio project demonstrating multi-tenant e-commerce architecture. It supports multiple independent tenants with complete data isolation, a custom visual storefront designer, secure HTTP-only cookie sessions, group-based permissions, and tenant-scoped product management.
 
-The project consists of two main frontend applications (built with Vite + React + TypeScript) and a FastAPI backend.
+The project is a single monorepo containing two frontend applications (built with Vite + React + TypeScript), a FastAPI backend, and shared packages.
 
 ## ✨ Key Features
 
@@ -35,13 +35,34 @@ The project consists of two main frontend applications (built with Vite + React 
 
 - **Frontend**: TypeScript, React, Vite, Tailwind CSS, Lucide Icons
 - **Backend**: Python, FastAPI, PostgreSQL
-- **Database**: Hand-written SQL queries
+- **Database**: Hand-written SQL queries + Alembic migrations
 - **Auth**: HTTP-only cookies + session revocation + tenant resolution middleware
 
 ## 📂 Source Code
 
 All code and project structure:  
 https://github.com/akinolaemmanuel49/oja
+
+### Monorepo Layout
+
+```
+oja/
+  oja-app/              # Admin dashboard (React + Vite + TypeScript)
+  oja-storefront/       # Public storefront renderer (React + Vite + TypeScript)
+  oja-backend/          # API server (Python + FastAPI + PostgreSQL)
+  packages/
+    ui/                 # Shared component library (@oja/ui)
+    data/               # Shared data utilities (@oja/data)
+    motion-design/      # Shared animation utilities (@oja/motion-design)
+  docs/                 # Design guide, database relationship map
+  docker-compose.yml    # Single definition for db, api, app, storefront
+```
+
+## 📚 Documentation
+
+- [Design Guide](docs/DESIGN_GUIDE.md) — design tokens, motion system, animation primitives
+- [Database Relationships](docs/DATABASE_RELATIONSHIPS.md) — schema map, FK constraints, permission inheritance
+- [Roadmap](ROADMAP.md) — merged commit history and current status
 
 ## 📸 Screenshots
 

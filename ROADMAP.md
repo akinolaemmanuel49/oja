@@ -1,11 +1,11 @@
 # Oja - Project Roadmap
 
-Oja (Yoruba for "market") is a full-stack multi-tenant e-commerce platform.
+Ọjà (Yoruba for "market") is a full-stack multi-tenant e-commerce platform.
 
 ## Architecture
 
 ```
-oja/
+oja/                      # Single repo (root is source of truth)
   oja-app/          # Admin dashboard (React + Vite + TypeScript)
   oja-storefront/   # Public storefront renderer (React + Vite + TypeScript)
   oja-backend/      # API server (Python + FastAPI + PostgreSQL)
@@ -15,9 +15,15 @@ oja/
     motion-design/  # Shared animation utilities (@oja/motion-design)
 ```
 
+> The three apps were originally separate repositories used as git submodules.
+> Their histories were merged into this single repo (Sep 2026) via `git subtree add` —
+> the root repo is now the single point of truth and the submodules were removed.
+
 ## Merged Commit History
 
 All commits across the three projects, sorted chronologically (oldest first).
+(Hashes predating the subtree merge refer to the original oja-app / oja-storefront /
+oja-backend repos; after Sep 16, 2026 all history lives in the `oja` repo.)
 
 ### Phase 1: Foundation (Jan 19 - Jan 26, 2026)
 
@@ -130,6 +136,16 @@ All commits across the three projects, sorted chronologically (oldest first).
 | 2026-09-06 | backend     | f9b9723 | update: minor changes |
 | 2026-09-06 | root        | 529aeca | update |
 
+### Phase 6: Monorepo Consolidation (Sep 16, 2026)
+
+| Date       | Project | Commit   | Summary |
+|------------|---------|----------|---------|
+| 2026-09-16 | root    | 77e8f09  | chore: remove submodules, prepare for subtree merge |
+| 2026-09-16 | root    | 9929782  | Add 'oja-app/' from commit '0c26bf9' (subtree) |
+| 2026-09-16 | root    | f70da8b  | Add 'oja-storefront/' from commit '0a2a1b4' (subtree) |
+| 2026-09-16 | root    | 34f47dd  | Add 'oja-backend/' from commit 'f9b9723' (subtree) |
+| 2026-09-16 | root    | 4a28b17  | refactor: consolidate submodules into single monorepo (root-context Dockerfiles, single compose definition, unified lockfile, unignore docker-compose.yml) |
+
 ## Current Status
 
 - **oja-app** (admin dashboard): Product management, user/group/permissions system, visual storefront designer with live preview, true-modal preview, mobile-responsive layout
@@ -147,4 +163,4 @@ All commits across the three projects, sorted chronologically (oldest first).
 - [ ] Custom domain mapping
 - [ ] Tenant analytics dashboard
 - [ ] Comprehensive test coverage
-- [ ] oja-backend: commit backend source to tracked history (currently untracked submodule content)
+- [ ] Archive the now-deprecated leaf repos (oja-app, oja-storefront, oja-backend) on GitHub

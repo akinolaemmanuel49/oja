@@ -29,5 +29,4 @@ __pycache__
 *.sw?
 
 .env
-OJA-DB-RELATIONSHIPS.md
 TODO.md
