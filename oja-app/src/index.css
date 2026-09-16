@@ -1,0 +1,112 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+@import "tailwindcss";
+@import "@oja/ui/styles.css";
+
+/* Scan @oja/ui component sources so Tailwind generates their utility classes */
+@source "../../packages/ui/src";
+
+/* ============================================================
+   Ọjà Design System — Design Tokens
+   ============================================================ */
+
+@theme inline {
+  /* Dashboard ambient gradient */
+  --color-accent-start: #2563EB;
+  --color-accent-end: #7C3AED;
+
+  /* Semantic surfaces */
+  --color-surface: #FFFFFF;
+  --color-surface-dim: #F8FAFC;
+
+  /* Ambient gradient for login/brand */
+  --gradient-brand: linear-gradient(135deg, #2563EB 0%, #7C3AED 50%, #2563EB 100%);
+}
+
+/* ============================================================
+   Ambient Animations (CSS-only, lightweight)
+   ============================================================ */
+
+@keyframes gradient-drift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes aurora-pulse {
+  0%, 100% { opacity: 0.4; transform: scale(1) rotate(0deg); }
+  33% { opacity: 0.6; transform: scale(1.05) rotate(1deg); }
+  66% { opacity: 0.3; transform: scale(0.98) rotate(-1deg); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); }
+  50% { box-shadow: 0 0 20px 4px rgba(37, 99, 235, 0.15); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateX(8px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* ============================================================
+   Utility Classes
+   ============================================================ */
+
+.animate-gradient-drift {
+  background-size: 200% 200%;
+  animation: gradient-drift 8s ease-in-out infinite;
+}
+
+.animate-aurora {
+  animation: aurora-pulse 12s ease-in-out infinite;
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.4) 50%, transparent 100%);
+  background-size: 200% 100%;
+  animation: shimmer 2s linear infinite;
+}
+
+.animate-glow-pulse {
+  animation: glow-pulse 3s ease-in-out infinite;
+}
+
+/* Skeleton shimmer upgrade */
+.skeleton-shimmer {
+  position: relative;
+  overflow: hidden;
+  background: #F1F5F9;
+}
+.skeleton-shimmer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.6) 50%, transparent 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s linear infinite;
+}
+
+/* ============================================================
+   Accessibility — Reduced Motion
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -1,0 +1,20 @@
+User-agent: *
+Allow: /
+Allow: /login
+Allow: /signup
+Allow: /users
+Allow: /groups
+Allow: /storefronts
+Allow: /products
+Disallow: /users/
+Disallow: /groups/
+Disallow: /storefronts/
+Disallow: /products/
+Disallow: /create
+Disallow: /edit
+Disallow: /:id
+Disallow: /settings
+Disallow: /*/*
+
+# Optional: sitemap (strongly recommended)
+# Sitemap: https://yourdomain.com/sitemap.xml
