@@ -11,6 +11,11 @@ node_modules
 dist
 dist-ssr
 *.local
+*.tsbuildinfo
+__pycache__
+*.py[cod]
+.pytest_cache
+.venv
 
 # Editor directories and files
 .vscode/*
@@ -24,6 +29,5 @@ dist-ssr
 *.sw?
 
 .env
-docker-compose.yml
 OJA-DB-RELATIONSHIPS.md
 TODO.md
