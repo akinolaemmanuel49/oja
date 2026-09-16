@@ -163,4 +163,4 @@ oja-backend repos; after Sep 16, 2026 all history lives in the `oja` repo.)
 - [ ] Custom domain mapping
 - [ ] Tenant analytics dashboard
 - [ ] Comprehensive test coverage
-- [ ] Archive the now-deprecated leaf repos (oja-app, oja-storefront, oja-backend) on GitHub
+- [x] Archive the now-deprecated leaf repos (oja-app, oja-storefront, oja-backend) on GitHub

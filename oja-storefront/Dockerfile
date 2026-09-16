@@ -8,7 +8,12 @@ COPY packages/ui/package.json ./packages/ui/
 COPY packages/data/package.json ./packages/data/
 COPY packages/motion-design/package.json ./packages/motion-design/
 COPY oja-storefront/package.json ./oja-storefront/
-RUN npm install
+RUN npm ci && \
+    R=$(node -p "require('./node_modules/rollup/package.json').version") && \
+    E=$(node -p "require('./node_modules/esbuild/package.json').version") && \
+    O=$(node -p "require('./node_modules/@tailwindcss/oxide/package.json').version") && \
+    L=$(node -p "require('./node_modules/lightningcss/package.json').version") && \
+    npm install --no-save "@rollup/rollup-linux-x64-gnu@$R" "@esbuild/linux-x64@$E" "@tailwindcss/oxide-linux-x64-gnu@$O" "lightningcss-linux-x64-gnu@$L"
 
 # Copy source
 COPY packages/ ./packages/

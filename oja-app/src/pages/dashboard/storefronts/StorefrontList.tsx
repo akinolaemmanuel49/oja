@@ -110,7 +110,7 @@ export default function StorefrontList() {
                             {store.status === "inactive" && <Lock className="h-4 w-4 text-amber-500" />}
                           </div>
                         </td>
-                        <td className="py-3 px-4 text-gray-600">/{store.slug}</td>
+                        <td className="py-3 px-4 text-gray-600">{store.slug}</td>
                         <td className="py-3 px-4 text-gray-600">
                           {store.domain ? (
                             <a href={`https://${store.domain}`} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline flex items-center gap-1">
