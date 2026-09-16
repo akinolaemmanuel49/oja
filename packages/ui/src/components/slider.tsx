@@ -24,7 +24,7 @@ export const Slider = forwardRef<HTMLInputElement, SliderProps>(
 
     return (
       <div className={cn("flex flex-col gap-2", className)}>
-        <div className="relative flex h-5 w-full items-center">
+        <div className="relative flex h-5 w-full items-center overflow-hidden">
           {/* Track */}
           <div className="relative h-1.5 w-full rounded-full bg-muted">
             {/* Active range */}
@@ -33,7 +33,9 @@ export const Slider = forwardRef<HTMLInputElement, SliderProps>(
               style={{ left: `${pct(lo)}%`, width: `${pct(hi) - pct(lo)}%` }}
             />
           </div>
-          {/* Thumbs */}
+          {/* Thumbs — native range inputs drive the drag; the visible thumbs
+              are the custom spans below. Inputs must keep pointer-events so the
+              draggable thumb pseudo-element is interactive. */}
           <input
             ref={ref}
             type="range"
@@ -42,12 +44,12 @@ export const Slider = forwardRef<HTMLInputElement, SliderProps>(
             step={step}
             value={lo}
             disabled={disabled}
+            aria-label="Minimum value"
             onChange={(e) => {
               const v = Math.min(Number(e.target.value), hi - gap);
               onValueChange?.([v, hi]);
             }}
-            style={{ left: `${pct(lo)}%` }}
-            className="pointer-events-none absolute h-5 w-full cursor-pointer opacity-0"
+            className="pointer-events-none absolute inset-y-0 left-0 h-full w-full cursor-pointer opacity-0 [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:appearance-none"
           />
           <input
             type="range"
@@ -56,12 +58,12 @@ export const Slider = forwardRef<HTMLInputElement, SliderProps>(
             step={step}
             value={hi}
             disabled={disabled}
+            aria-label="Maximum value"
             onChange={(e) => {
               const v = Math.max(Number(e.target.value), lo + gap);
               onValueChange?.([lo, v]);
             }}
-            style={{ left: `${pct(hi)}%` }}
-            className="pointer-events-none absolute h-5 w-full cursor-pointer opacity-0"
+            className="pointer-events-none absolute inset-y-0 left-0 h-full w-full cursor-pointer opacity-0 [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:appearance-none"
           />
           <span
             className="pointer-events-none absolute h-4 w-4 rounded-full border border-white bg-primary shadow transition-transform"

@@ -1,7 +1,9 @@
+import * as React from "react";
 import {
   createContext,
   useContext,
   useEffect,
+  useMemo,
   useRef,
   useState,
   type ReactNode,
@@ -21,6 +23,7 @@ interface SelectContextValue {
   open: boolean;
   setOpen: (open: boolean) => void;
   triggerRef: React.RefObject<HTMLButtonElement | null>;
+  options: ReadonlyMap<string, string>;
 }
 
 const SelectContext = createContext<SelectContextValue | null>(null);
@@ -38,9 +41,53 @@ interface SelectProps<T extends string = string> {
   children: ReactNode;
 }
 
+/**
+ * Walk the JSX children tree and collect `value → label` pairs from
+ * `<SelectItem>` elements. This works even while the dropdown menu is
+ * closed (the menu is portaled and unmounted when closed), so the trigger
+ * can display the item's label text instead of the raw value.
+ */
+function extractItemLabels(children: ReactNode, map: Map<string, string>): void {
+  for (const child of React.Children.toArray(children)) {
+    if (!React.isValidElement(child)) continue;
+    if ((child.type as unknown) === SelectItem) {
+      const value = (child.props as { value?: unknown }).value;
+      if (typeof value === "string") {
+        if (!map.has(value)) {
+          map.set(value, nodeToText((child.props as { children?: ReactNode }).children));
+        }
+      }
+    } else {
+      extractItemLabels((child.props as { children?: ReactNode }).children, map);
+    }
+  }
+}
+
+function nodeToText(node: ReactNode): string {
+  if (
+    typeof node === "string" ||
+    typeof node === "number" ||
+    typeof node === "bigint"
+  ) {
+    return String(node);
+  }
+  if (node == null || typeof node === "boolean") return "";
+  if (Array.isArray(node)) return node.map(nodeToText).join("");
+  if (React.isValidElement(node)) {
+    return nodeToText((node.props as { children?: ReactNode }).children);
+  }
+  return "";
+}
+
 export function Select<T extends string = string>({ value, onValueChange, disabled, children }: SelectProps<T>) {
   const [open, setOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement | null>(null);
+
+  const options = useMemo(() => {
+    const map = new Map<string, string>();
+    extractItemLabels(children, map);
+    return map;
+  }, [children]);
 
   return (
     <SelectContext.Provider
@@ -50,6 +97,7 @@ export function Select<T extends string = string>({ value, onValueChange, disabl
         open: open && !disabled,
         setOpen: disabled ? () => {} : setOpen,
         triggerRef,
+        options,
       }}
     >
       {children}
@@ -62,10 +110,12 @@ interface SelectValueProps {
   children?: ReactNode;
 }
 
-// Displays the currently selected value. Standalone: shows the raw value string.
+// Displays the currently selected value — resolves the item's label text.
+// Falls back to the raw value, then placeholder, if no label is known.
 export function SelectValue({ placeholder, children }: SelectValueProps) {
-  const { value } = useSelect();
-  return <>{children ?? value ?? placeholder ?? "Select..."}</>;
+  const { value, options } = useSelect();
+  const label = options.get(value);
+  return <>{children ?? label ?? value ?? placeholder ?? "Select..."}</>;
 }
 
 interface SelectTriggerProps {

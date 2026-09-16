@@ -246,8 +246,8 @@ export default function StorefrontProducts() {
                         <StorefrontProductImageDisplay product={sp} />
                       </td>
                       <td className="py-3 px-4">
-                        <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-gray-100 text-gray-800 capitalize">
-                          {sp.product_type}
+                        <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-gray-100 text-gray-800">
+                          {sp.product_type === "variable" ? "Variable" : "Simple"}
                         </span>
                       </td>
                       {/* SKU / Variants Column - Different display for simple vs variable */}

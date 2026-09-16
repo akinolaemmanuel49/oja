@@ -9,7 +9,7 @@ import type {
   ThemeConfig,
   PageType,
 } from "@/types/storefront.design";
-import { PAGE_TYPE_LABELS } from "@/types/storefront.design";
+import { PAGE_TYPE_LABELS, COMPONENT_TYPE_LABELS } from "@/types/storefront.design";
 import { ComponentPreview } from "./ComponentPreview";
 
 interface CanvasAreaProps {
@@ -142,7 +142,7 @@ function SortableComponent({
           </button>
 
           <span className="text-xs text-gray-600 font-medium flex-1 truncate">
-            {component.type.replace(/_/g, " ").toUpperCase()}
+            {COMPONENT_TYPE_LABELS[component.type].toUpperCase()}
           </span>
 
           <Button

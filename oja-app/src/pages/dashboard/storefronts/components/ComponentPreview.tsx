@@ -1,4 +1,5 @@
 import type { PageComponent, ThemeConfig } from "@/types/storefront.design";
+import { PRODUCT_SORT_ORDER_LABELS } from "@/types/storefront.design";
 import { cn } from "@/lib/utils";
 import {
   Package,
@@ -283,7 +284,7 @@ function ProductGridPreview({
         )}
       </div>
       <p className="text-xs text-gray-400 mt-2">
-        {data.limit} products · {data.sortOrder.replace(/_/g, " ")}
+        {data.limit} products · {PRODUCT_SORT_ORDER_LABELS[data.sortOrder]}
       </p>
     </div>
   );
@@ -358,7 +359,7 @@ function ProductsHeaderPreview({
           <div className="flex items-center gap-2 text-sm border rounded px-3 py-1 bg-gray-50">
             <SlidersHorizontal className="h-3.5 w-3.5 text-gray-400" />
             <span className="text-gray-600">
-              {data.defaultSortOrder.replace(/_/g, " ")}
+              {PRODUCT_SORT_ORDER_LABELS[data.defaultSortOrder]}
             </span>
           </div>
         )}

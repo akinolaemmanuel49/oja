@@ -54,6 +54,22 @@ export type ComponentType =
   | ProductsOnlyComponentType
   | ProductDetailOnlyComponentType;
 
+export const COMPONENT_TYPE_LABELS: Record<ComponentType, string> = {
+  hero: "Hero",
+  banner: "Banner",
+  text: "Text",
+  image_gallery: "Image Gallery",
+  spacer: "Spacer",
+  product_grid: "Product Grid",
+  product_carousel: "Product Carousel",
+  products_header: "Products Header",
+  products_filter_bar: "Products Filter Bar",
+  product_images: "Product Images",
+  product_info: "Product Info",
+  product_tabs: "Product Tabs",
+  related_products: "Related Products",
+};
+
 /** Which component types are allowed per page */
 export const ALLOWED_COMPONENTS_BY_PAGE: Record<PageType, ComponentType[]> = {
   home: [
@@ -93,6 +109,15 @@ export type ProductSortOrder =
   | "price_high_low" // Price DESC
   | "name_a_z" // Name ASC
   | "name_z_a"; // Name DESC
+
+export const PRODUCT_SORT_ORDER_LABELS: Record<ProductSortOrder, string> = {
+  newest_first: "Newest First",
+  oldest_first: "Oldest First",
+  price_low_high: "Price: Low to High",
+  price_high_low: "Price: High to Low",
+  name_a_z: "Name: A-Z",
+  name_z_a: "Name: Z-A",
+};
 
 // ============================================================================
 // BASE COMPONENT INTERFACE

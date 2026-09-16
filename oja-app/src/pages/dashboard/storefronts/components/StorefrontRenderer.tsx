@@ -95,7 +95,8 @@ export function StorefrontRenderer({
 }: StorefrontRendererProps) {
   const { mode } = useStorefront();
 
-  // Calculate price range from actual products - add buffer to ensure max is captured
+  // Calculate price range from actual products — min is always 0,
+  // max is the price of the most expensive product in the store
   const { priceMin, priceMax } = useMemo(() => {
     const prices = storefrontProducts
       .filter((p) => p.is_visible)
@@ -108,13 +109,9 @@ export function StorefrontRenderer({
 
     if (prices.length === 0) return { priceMin: 0, priceMax: 100000 };
 
-    const rawMin = Math.min(...prices);
-    const rawMax = Math.max(...prices);
-
     return {
-      priceMin: Math.floor(rawMin / 1000) * 1000,
-      // Add 1000 to max to ensure the highest priced product is included
-      priceMax: Math.ceil((rawMax + 1000) / 1000) * 1000,
+      priceMin: 0,
+      priceMax: Math.max(...prices),
     };
   }, [storefrontProducts]);
 
@@ -618,7 +615,7 @@ function ProductGridRenderer({
   };
 
   return (
-    <div className="px-4 md:px-8 py-8 md:py-12">
+    <div className="px-4 md:px-8 py-8 md:py-12 w-full max-w-7xl mx-auto">
       {data.title && (
         <h2
           className="text-xl md:text-3xl font-bold mb-4 md:mb-8"
@@ -700,7 +697,7 @@ function ProductCarouselRenderer({
   const visibleProducts = products.slice(0, data.limit);
 
   return (
-    <div className="px-4 md:px-8 py-8 md:py-12">
+    <div className="px-4 md:px-8 py-8 md:py-12 w-full max-w-7xl mx-auto">
       {data.title && (
         <h2
           className="text-xl md:text-3xl font-bold mb-4 md:mb-8"
@@ -755,7 +752,7 @@ function RelatedProductsRenderer({
   };
 
   return (
-    <div className="px-4 md:px-8 py-8 md:py-12 border-t">
+    <div className="px-4 md:px-8 py-8 md:py-12 border-t w-full max-w-7xl mx-auto">
       <h2
         className="text-xl md:text-3xl font-bold mb-4 md:mb-8"
         style={{ color: theme.colors.text, fontFamily: theme.fonts.heading }}
@@ -896,7 +893,7 @@ function ProductsHeaderRenderer({
   const { filters, updateFilters } = useFilters();
 
   return (
-    <div className="px-4 md:px-8 py-4 md:py-6">
+    <div className="px-4 md:px-8 py-4 md:py-6 w-full max-w-7xl mx-auto">
       <h1
         className="text-2xl md:text-4xl font-bold mb-1"
         style={{ color: theme.colors.text, fontFamily: theme.fonts.heading }}
@@ -920,8 +917,10 @@ function ProductsHeaderRenderer({
             onValueChange={(value) => updateFilters({ sortOrder: value })}
           >
             <SelectTrigger className="w-full sm:w-50">
-              <SlidersHorizontal className="h-3 md:h-4 w-3 md:w-4 mr-2" />
-              <SelectValue />
+              <span className="flex items-center gap-2 min-w-0">
+                <SlidersHorizontal className="h-3 md:h-4 w-3 md:w-4 shrink-0" />
+                <SelectValue />
+              </span>
             </SelectTrigger>
             <SelectContent className="bg-white">
               <SelectItem value="newest_first">Newest First</SelectItem>
@@ -950,12 +949,17 @@ function ProductsFilterBarRenderer({
 
   return (
     <div
-      className={`px-4 md:px-8 py-3 md:py-4 border-y flex ${
-        data.filterPosition === "side"
-          ? "flex-col gap-3 md:gap-4"
-          : "flex-col sm:flex-row flex-wrap gap-3 md:gap-4 items-start"
-      } bg-gray-50 ${data.sticky ? "sticky top-0 z-10" : ""}`}
+      className={`w-full border-y bg-gray-50 ${
+        data.sticky ? "sticky top-0 z-10" : ""
+      }`}
     >
+      <div
+        className={`px-4 md:px-8 py-3 md:py-4 w-full max-w-7xl mx-auto flex ${
+          data.filterPosition === "side"
+            ? "flex-col gap-3 md:gap-4"
+            : "flex-col sm:flex-row flex-wrap gap-3 md:gap-4 items-start"
+        }`}
+      >
       <span className="text-xs md:text-sm font-medium text-gray-700">
         Filters:
       </span>
@@ -1008,6 +1012,7 @@ function ProductsFilterBarRenderer({
           </Select>
         </div>
       )}
+      </div>
     </div>
   );
 }

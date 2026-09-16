@@ -3,6 +3,7 @@ import { Button,Input,Label,Select,SelectContent,SelectItem,SelectTrigger,Select
 import { X, Upload, Trash2, Plus } from "lucide-react";
 
 import type { PageComponent } from "@/types/storefront.design";
+import { COMPONENT_TYPE_LABELS } from "@/types/storefront.design";
 import { uploadImageToCloudinary } from "@/lib/cloudinaryUpload";
 import { RichTextEditor } from "./RichTextEditor";
 
@@ -30,8 +31,8 @@ export function ComponentEditor({
       <div className="p-4 border-b flex items-center justify-between bg-white sticky top-0 z-10">
         <div>
           <h3 className="font-bold">Edit Component</h3>
-          <p className="text-xs text-gray-600 capitalize">
-            {component.type.replace(/_/g, " ")}
+          <p className="text-xs text-gray-600">
+            {COMPONENT_TYPE_LABELS[component.type]}
           </p>
         </div>
         <Button variant="ghost" size="sm" onClick={onClose}>
