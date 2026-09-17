@@ -7,6 +7,10 @@ export type CreateStorefrontRequest = {
   slug: string;
   name: string;
   domain?: string;
+  meta_title?: string;
+  meta_description?: string;
+  og_image?: string;
+  favicon?: string;
 };
 
 /**
@@ -17,4 +21,8 @@ export type UpdateStorefrontRequest = {
   name: string;
   domain?: string;
   status?: StorefrontStatus;
+  meta_title?: string;
+  meta_description?: string;
+  og_image?: string;
+  favicon?: string;
 };

@@ -23,6 +23,9 @@ export const ProtectedHref = {
   storefrontsRoute: "/storefronts",
   createStorefrontRoute: "/storefronts/create",
   editStorefrontRoute: (storeId = ":id") => `/storefronts/${storeId}/edit`,
+  storefrontOrdersRoute: (storeId = ":id") => `/storefronts/${storeId}/orders`,
+  storefrontOrderDetailRoute: (storeId = ":id", orderId = ":orderId") =>
+    `/storefronts/${storeId}/orders/${orderId}`,
   productsRoute: "/products",
   createProductRoute: "/products/create",
   editProductRoute: (productId = ":id") => `/products/${productId}/edit`,

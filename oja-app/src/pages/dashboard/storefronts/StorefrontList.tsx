@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { Button,Card,CardContent,CardHeader,CardTitle } from "@oja/ui";
-import { Plus, Edit, Trash2, Globe, Lock, Package, Paintbrush } from "lucide-react";
+import { Plus, Edit, Trash2, Globe, Lock, Package, Paintbrush, ReceiptText } from "lucide-react";
 import { PermissionGuard } from "@/components/guards/PermissionGuard";
 import { usePermissions } from "@/hooks/usePermissions";
 import { fetchStorefronts } from "@/api/storefronts/fetchStorefronts";
@@ -33,10 +33,12 @@ export default function StorefrontList() {
   const canCreate = can("storefronts:create");
   const canUpdate = can("storefronts:update");
   const canDelete = can("storefronts:delete");
+  const canReadOrders = can("orders:read");
 
   const handleEditClick = (storefront: Storefront) => navigate(`/storefronts/${storefront.id}/edit`);
   const handleDesignerClick = (storefront: Storefront) => navigate(`/storefronts/${storefront.id}/designer`);
   const handleProductsClick = (storefront: Storefront) => navigate(`/storefronts/${storefront.id}/products`);
+  const handleOrdersClick = (storefront: Storefront) => navigate(`/storefronts/${storefront.id}/orders`);
   const handleCreateClick = () => navigate("/storefronts/create");
   const handleDeleteClick = (storefront: Storefront) => console.log("Delete storefront:", storefront.id);
 
@@ -124,9 +126,12 @@ export default function StorefrontList() {
                             {store.status.charAt(0).toUpperCase() + store.status.slice(1)}
                           </span>
                         </td>
-                        {(canUpdate || canDelete) && (
+                        {(canUpdate || canDelete || canReadOrders) && (
                           <td className="py-3 px-4">
                             <div className="flex items-center justify-end gap-2">
+                              <PermissionGuard permission="orders:read">
+                                <Button variant="ghost" size="sm" onClick={() => handleOrdersClick(store)} title="Manage orders" className="hover:cursor-pointer"><ReceiptText className="h-4 w-4" /></Button>
+                              </PermissionGuard>
                               <PermissionGuard permission="storefronts:read">
                                 <Button variant="ghost" size="sm" onClick={() => handleProductsClick(store)} title="Manage products" className="hover:cursor-pointer"><Package className="h-4 w-4" /></Button>
                               </PermissionGuard>

@@ -14,6 +14,10 @@ export type Storefront = {
   domain?: string;
   design_config?: StorefrontDesign;
   status: StorefrontStatus;
+  meta_title?: string;
+  meta_description?: string;
+  og_image?: string;
+  favicon?: string;
   deleted_at?: string;
   created_at: string;
   updated_at: string;

@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router-dom";
-import { Button,Input,Label,Card,CardContent,CardDescription,CardHeader,CardTitle,Select,SelectContent,SelectItem,SelectTrigger,SelectValue,Alert,AlertDescription } from "@oja/ui";
+import { Button,Input,Label,Card,CardContent,CardDescription,CardHeader,CardTitle,Select,SelectContent,SelectItem,SelectTrigger,SelectValue,Alert,AlertDescription,Textarea } from "@oja/ui";
 import { Loader2, ArrowLeft, Info } from "lucide-react";
 import { UpdateStorefrontMutationFn } from "@/api/storefronts/updateStorefront";
 import { fetchStorefront } from "@/api/storefronts/fetchStorefront";
@@ -66,6 +66,10 @@ function EditStorefrontForm({ storefront }: { storefront: Storefront }) {
     status: (storefront.status === "active"
       ? "active"
       : "inactive") as StorefrontStatus,
+    meta_title: storefront.meta_title || "",
+    meta_description: storefront.meta_description || "",
+    og_image: storefront.og_image || "",
+    favicon: storefront.favicon || "",
   });
 
   const [errors, setErrors] = useState<
@@ -233,6 +237,95 @@ function EditStorefrontForm({ storefront }: { storefront: Storefront }) {
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 )}
                 Save Changes
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => navigate(AppHref.storefrontsRoute)}
+                className="hover:cursor-pointer"
+              >
+                Cancel
+              </Button>
+            </div>
+          </form>
+        </CardContent>
+      </Card>
+
+      <Card className="mt-6">
+        <CardHeader>
+          <CardTitle>SEO</CardTitle>
+          <CardDescription>
+            Meta tags for search engines and social sharing. These power the
+            storefront's title, description, preview image and favicon.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="space-y-2">
+              <Label htmlFor="meta_title">Meta Title</Label>
+              <Input
+                id="meta_title"
+                value={formData.meta_title}
+                maxLength={60}
+                onChange={(e) =>
+                  handleFieldChange("meta_title", e.target.value)
+                }
+                disabled={updateStorefrontMutation.isPending}
+              />
+              <p className="text-xs text-gray-500">
+                {formData.meta_title?.length ?? 0}/60 characters
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="meta_description">Meta Description</Label>
+              <Textarea
+                id="meta_description"
+                value={formData.meta_description}
+                rows={3}
+                maxLength={160}
+                onChange={(e) =>
+                  handleFieldChange("meta_description", e.target.value)
+                }
+                disabled={updateStorefrontMutation.isPending}
+              />
+              <p className="text-xs text-gray-500">
+                {formData.meta_description?.length ?? 0}/160 characters
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="og_image">Social Preview Image URL</Label>
+              <Input
+                id="og_image"
+                value={formData.og_image}
+                placeholder="https://… (used for OG and Twitter cards)"
+                onChange={(e) => handleFieldChange("og_image", e.target.value)}
+                disabled={updateStorefrontMutation.isPending}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="favicon">Favicon URL</Label>
+              <Input
+                id="favicon"
+                value={formData.favicon}
+                placeholder="https://… (browser tab icon)"
+                onChange={(e) => handleFieldChange("favicon", e.target.value)}
+                disabled={updateStorefrontMutation.isPending}
+              />
+            </div>
+
+            <div className="flex gap-4 pt-4">
+              <Button
+                type="submit"
+                disabled={updateStorefrontMutation.isPending}
+                className="flex-1 hover:cursor-pointer"
+              >
+                {updateStorefrontMutation.isPending && (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                )}
+                Save SEO
               </Button>
               <Button
                 type="button"
