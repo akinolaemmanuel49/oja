@@ -9,11 +9,14 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from src.analytics.router import analytics_router
 from src.auth.router import auth_router
+from src.carts.router import cart_router
 from src.core.config import settings
 from src.core.dependencies import get_db
+from src.customers.router import customer_router
 from src.database.engine import engine
 from src.groups.router import group_router
 from src.middleware.wildcard_cors_middleware import WildcardCORSMiddleware
+from src.orders.router import order_router
 from src.permissions.router import permissions_router
 from src.products.router import products_router
 from src.storefront_products.router import (
@@ -132,6 +135,12 @@ app.include_router(storefront_products_router, dependencies=[Depends(get_db)])
 app.include_router(storefront_public_router, dependencies=[Depends(get_db)])
 # Storefront Products Public routes
 app.include_router(storefront_products_public_router, dependencies=[Depends(get_db)])
+# Customer (storefront membership) routes
+app.include_router(customer_router, dependencies=[Depends(get_db)])
+# Cart routes
+app.include_router(cart_router, dependencies=[Depends(get_db)])
+# Order / checkout routes
+app.include_router(order_router, dependencies=[Depends(get_db)])
 
 
 @app.get("/health")

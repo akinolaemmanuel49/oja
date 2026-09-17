@@ -74,6 +74,20 @@ GET_DESIGN_CONFIG_QUERY = text("""
     WHERE id = :storefront_id AND tenant_id = :tenant_id
 """)
 
+STOREFRONT_EXISTS_QUERY = text("""
+    SELECT id FROM storefronts
+    WHERE id = :storefront_id AND status = 'active' AND deleted_at IS NULL
+    LIMIT 1
+""")
+
+
+async def storefront_exists_service(
+    db: AsyncSession, storefront_id: str
+) -> bool:
+    """Check that a storefront exists and is active (public-facing check)."""
+    result = await db.execute(STOREFRONT_EXISTS_QUERY, {"storefront_id": storefront_id})
+    return result.scalar_one_or_none() is not None
+
 
 async def create_storefront_service(
     db: AsyncSession, tenant_id: str, data: StorefrontCreate

@@ -1,8 +1,12 @@
-from fastapi import APIRouter, Depends, Request, Response
+from fastapi import APIRouter, Depends, HTTPException, Request, Response
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.auth.schemas import Login
-from src.auth.service import login_service
+from src.auth.schemas import ForgotPassword, Login, ResetPassword
+from src.auth.service import (
+    login_service,
+    request_password_reset_service,
+    reset_password_service,
+)
 from src.core.dependencies import get_current_user, get_db
 from src.core.session import create_session, destroy_session
 from src.users.schemas import UserWithPermissions
@@ -43,3 +47,29 @@ async def me(
     permissions = result["permissions"]
 
     return UserWithPermissions(user=user, permissions=permissions)
+
+
+@auth_router.post("/forgot-password")
+async def forgot_password(
+    data: ForgotPassword,
+    db: AsyncSession = Depends(get_db),
+):
+    """
+    Request a password reset code for a dashboard user. (Dashboard users only.)
+    """
+    return await request_password_reset_service(db, str(data.email))
+
+
+@auth_router.post("/reset-password")
+async def reset_password(
+    data: ResetPassword,
+    db: AsyncSession = Depends(get_db),
+):
+    try:
+        await reset_password_service(
+            db, str(data.email), data.code, data.new_password
+        )
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e)) from e
+
+    return {"message": "Password updated successfully"}

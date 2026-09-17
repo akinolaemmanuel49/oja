@@ -70,6 +70,40 @@ class Settings(BaseSettings):
         default="N/A",
     )
 
+    # Email delivery (Resend)
+    RESEND_API_KEY: str = Field(
+        description="Resend API key for transactional email",
+        default="N/A",
+    )
+    RESEND_FROM: str = Field(
+        description="Verified 'From' address used by Resend",
+        default="Oja <onboarding@resend.dev>",
+    )
+
+    # Payments (Paystack)
+    PAYSTACK_SECRET_KEY: str = Field(
+        description="Paystack secret key",
+        default="N/A",
+    )
+    PAYSTACK_PUBLIC_KEY: str = Field(
+        description="Paystack public key (used client-side)",
+        default="N/A",
+    )
+    PAYSTACK_API_URL: str = Field(
+        description="Paystack API base URL",
+        default="https://api.paystack.co",
+    )
+
+    # Frontend URLs (used for email links / payment callbacks)
+    FRONTEND_APP_URL: str = Field(
+        description="Dashboard app base URL",
+        default="http://localhost:5173",
+    )
+    FRONTEND_STOREFRONT_URL: str = Field(
+        description="Storefront base URL",
+        default="http://localhost:5174",
+    )
+
     @property
     def is_production(self):
         return self.ENVIRONMENT == "production"
