@@ -10,9 +10,17 @@ const StorefrontProductDetailPage = lazy(
   () => import("./pages/StorefrontProductDetail"),
 );
 const StorefrontNotFoundPage = lazy(() => import("./pages/StorefrontNotFound"));
+const PaymentCallbackPage = lazy(() => import("./pages/PaymentCallback"));
 
 // Utils
 import { extractSubdomain } from "./utils/subdomain";
+
+// Shop (customer auth, cart, checkout)
+import { CartDrawer } from "./shop/CartDrawer";
+import { FloatingCartBar } from "./shop/FloatingCartBar";
+import { OrdersDialog } from "./shop/OrdersDialog";
+import { ShopProvider } from "./shop/shopContext";
+import { SignInDialog } from "./shop/SignInDialog";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -92,39 +100,49 @@ export default function StorefrontApp({ storefrontSlug }: StorefrontAppProps) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <Routes>
-          {/* Home page */}
-          <Route
-            path="/"
-            element={<StorefrontHomePage storefrontSlug={storefrontSlug} />}
-          />
+      <ShopProvider storefrontSlug={storefrontSlug}>
+        <BrowserRouter>
+          <Routes>
+            {/* Home page */}
+            <Route
+              path="/"
+              element={<StorefrontHomePage storefrontSlug={storefrontSlug} />}
+            />
 
-          {/* Products listing page */}
-          <Route
-            path="/products"
-            element={<StorefrontProductsPage storefrontSlug={storefrontSlug} />}
-          />
+            {/* Products listing page */}
+            <Route
+              path="/products"
+              element={<StorefrontProductsPage storefrontSlug={storefrontSlug} />}
+            />
 
-          {/* Product detail page */}
-          <Route
-            path="/products/:productId"
-            element={
-              <StorefrontProductDetailPage storefrontSlug={storefrontSlug} />
-            }
-          />
+            {/* Product detail page */}
+            <Route
+              path="/products/:productId"
+              element={
+                <StorefrontProductDetailPage storefrontSlug={storefrontSlug} />
+              }
+            />
 
-          {/* 404 fallback */}
-          <Route
-            path="/404"
-            element={<StorefrontNotFoundPage storefrontSlug={storefrontSlug} />}
-          />
+            {/* Payment callback (Paystack redirects here) */}
+            <Route path="/payment-callback" element={<PaymentCallbackPage />} />
 
-          {/* Catch all - redirect to 404 */}
-          <Route path="*" element={<Navigate to="/404" replace />} />
-        </Routes>
-        <Toaster />
-      </BrowserRouter>
+            {/* 404 fallback */}
+            <Route
+              path="/404"
+              element={<StorefrontNotFoundPage storefrontSlug={storefrontSlug} />}
+            />
+
+            {/* Catch all - redirect to 404 */}
+            <Route path="*" element={<Navigate to="/404" replace />} />
+          </Routes>
+
+          <FloatingCartBar />
+          <CartDrawer />
+          <SignInDialog />
+          <OrdersDialog />
+          <Toaster />
+        </BrowserRouter>
+      </ShopProvider>
     </QueryClientProvider>
   );
 }

@@ -23,7 +23,7 @@ import {
   X,
   ZoomIn,
 } from "lucide-react";
-import { Button, Label } from "@oja/ui";
+import { Button, Label, toast } from "@oja/ui";
 import {
   Select,
   SelectContent,
@@ -34,6 +34,7 @@ import {
 import { useStorefront } from "@/hooks/useStorefront";
 import { Slider } from "@oja/ui";
 import { motion } from "motion/react";
+import { useShop } from "@/hooks/useShop";
 
 // ============================================================================
 // FILTER CONTEXT - Share filter state across components
@@ -1344,6 +1345,7 @@ function ProductInfoRenderer({
 }) {
   const { data } = component;
   const [quantity, setQuantity] = useState(1);
+  const { addItem } = useShop();
 
   // Use the shared product detail context
   const { selectedVariantId, setSelectedVariantId } = useProductDetail();
@@ -1529,6 +1531,18 @@ function ProductInfoRenderer({
 
       <button
         disabled={!inStock}
+        onClick={() => {
+          if (!product) return;
+          if (isVariable && (!selectedVariantId || !currentVariant)) {
+            toast.error("Please select a product variant first");
+            return;
+          }
+          void addItem(
+            product.product_id,
+            isVariable ? selectedVariantId : null,
+            quantity,
+          );
+        }}
         className="w-full py-3 md:py-4 font-semibold text-white flex items-center justify-center gap-2 md:gap-3 text-base md:text-lg transition-all hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
         style={{ backgroundColor: theme.colors.primary, borderRadius: br }}
       >
