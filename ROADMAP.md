@@ -146,21 +146,37 @@ oja-backend repos; after Sep 16, 2026 all history lives in the `oja` repo.)
 | 2026-09-16 | root    | 34f47dd  | Add 'oja-backend/' from commit 'f9b9723' (subtree) |
 | 2026-09-16 | root    | 4a28b17  | refactor: consolidate submodules into single monorepo (root-context Dockerfiles, single compose definition, unified lockfile, unignore docker-compose.yml) |
 
+### Phase 7: Commerce & Order Operations (Sep 17, 2026)
+
+| Date       | Project | Commit  | Summary |
+|------------|---------|---------|---------|
+| 2026-09-17 | root    | 6c0bbe1 | feat(storefront): customer auth, cart, and checkout backend |
+| 2026-09-17 | root    | 5b2ad87 | feat(storefront): customer sign-in, cart drawer, checkout, and orders UI |
+| 2026-09-17 | root    | 6982613 | feat(dashboard): forgot/reset password flow; wire designer preview Add-to-Cart to guest cart |
+| 2026-09-17 | root    | d2dea6e | feat(backend): order management, per-storefront SEO, and status emails |
+| 2026-09-17 | root    | 713ce6e | feat(dashboard): storefront SEO settings and order management UI |
+| 2026-09-17 | root    | 5cca813 | feat(storefront): apply per-store SEO and return to store after payment |
+
 ## Current Status
 
-- **oja-app** (admin dashboard): Product management, user/group/permissions system, visual storefront designer with live preview, true-modal preview, mobile-responsive layout
-- **oja-storefront** (public storefront): Landing page, product listing, product detail with modern image gallery (zoom, keyboard nav, thumbnails), SEO, mobile single-column grids
-- **oja-backend** (API): FastAPI + PostgreSQL, multi-tenant auth (HTTP-only cookies), user/group/permissions CRUD, product/storefront management, analytics endpoints, containerized
+- **oja-app** (admin dashboard): Product management, user/group/permissions system, visual storefront designer with live preview, true-modal preview, mobile-responsive layout, per-storefront SEO settings, per-storefront order management (status updates + notes)
+- **oja-storefront** (public storefront): Landing page, product listing, product detail with modern image gallery (zoom, keyboard nav, thumbnails), SEO (incl. per-store metadata/favicon), mobile single-column grids, customer sign-in, cart drawer, Paystack checkout with return-to-store
+- **oja-backend** (API): FastAPI + PostgreSQL, multi-tenant auth (HTTP-only cookies), user/group/permissions CRUD, product/storefront management, analytics + dashboard endpoints, customer auth/cart/checkout, Paystack payment verification, order management endpoints with customer status emails, per-storefront SEO fields, containerized
 - **packages/ui** (@oja/ui): Shared component library (Button, Card, Dialog, Sheet, Tabs, Switch, Select, Table, Tooltip, etc.) — all apps now use this
 - **packages/data** (@oja/data): Shared data utilities
 - **packages/motion-design** (@oja/motion-design): Shared animation utilities
 
 ## What's Left / Next Steps
 
-- [ ] Payment integration (test mode)
-- [ ] Password recovery and email verification
+- [x] Payment integration (test mode) — Paystack checkout, verification, callback redirect to originating storefront
+- [x] Password recovery
+- [ ] Email verification
 - [ ] Full tenant settings UI
 - [ ] Custom domain mapping
 - [ ] Tenant analytics dashboard
 - [ ] Comprehensive test coverage
 - [x] Archive the now-deprecated leaf repos (oja-app, oja-storefront, oja-backend) on GitHub
+
+## Next Line Item
+
+**Full tenant settings UI** — extend the storefront settings surface (SEO is done) into a complete tenant settings experience: store details, branding, payment/gateway configuration, and notification preferences from the dashboard.

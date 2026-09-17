@@ -6,6 +6,18 @@ The project is a single monorepo containing two frontend applications (built wit
 
 ## ✨ Key Features
 
+- **Payments**  
+  Paystack integration (test mode) — checkout, payment verification after callback, and automatic return to the originating storefront.
+
+- **Storefront Commerce**  
+  Customer sign-in, guest cart with persistence, checkout, and customer-facing order history.
+
+- **Order Management**  
+  Per-storefront orders section in the dashboard: list with status filter, detail with line items, status updates with optional notes — customers are notified by email on status changes.
+
+- **Storefront SEO**  
+  Per-storefront meta title, description, social preview image, and favicon editable from the dashboard and applied on the public store.
+
 - **Multi-Tenancy**  
   Tenant isolation with separate data scopes for users, products, and storefront configurations.
 
@@ -23,13 +35,13 @@ The project is a single monorepo containing two frontend applications (built wit
 
 - **Frontend**  
   Two separate Vite + React + TypeScript apps:
-  - **Admin** — Protected dashboard for management, user/group handling, and the visual designer
+  - **Admin** — Protected dashboard for management, user/group handling, storefront SEO, order management, and the visual designer
   - **Storefront** — Public-facing renderer that dynamically displays each tenant's customized store
 
 - **Backend**  
   FastAPI with hand-written SQL queries (no ORM abstraction) for full control and performance insight.
 
-**Not implemented (yet):** Payments, password recovery, full settings UI.
+**Not implemented (yet):** email verification, full tenant settings UI, custom domain mapping, tenant analytics dashboard.
 
 ## 🏗️ Tech Stack
 
@@ -84,10 +96,10 @@ oja/
 
 ## 🔮 Future Ideas
 
-- Basic payment integration (e.g., test mode)
-- Password reset & email verification
-- Tenant analytics
+- Email verification
+- Full tenant settings UI (store details, branding, gateway configuration, notifications)
 - Custom domain mapping
+- Tenant analytics
 
 ## 📄 License
 
