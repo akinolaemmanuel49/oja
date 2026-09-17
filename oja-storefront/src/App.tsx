@@ -8,9 +8,18 @@ export default function App() {
   const [checked, setChecked] = useState(false);
 
   useEffect(() => {
-    const sub = extractSubdomain(window.location.hostname);
+    // Payment callbacks (Paystack) land on the bare host (e.g.
+    // localhost:5174) with ?storefront_slug=<slug>, so we recover the store
+    // context from the query string when there is no subdomain.
+    let resolved = extractSubdomain(window.location.hostname);
+    if (!resolved && window.location.pathname.startsWith("/payment-callback")) {
+      const callbackSlug = new URLSearchParams(window.location.search).get(
+        "storefront_slug",
+      );
+      resolved = callbackSlug || null;
+    }
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setSlug(sub);
+    setSlug(resolved);
     setChecked(true);
   }, []);
 

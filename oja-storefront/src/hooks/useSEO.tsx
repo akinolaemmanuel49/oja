@@ -23,10 +23,16 @@ export function useSEO(slug: string, options: SEOOptions = {}) {
   useEffect(() => {
     if (!storefront) return;
 
-    const defaultTitle = storefront.name || "Store";
+    const homeMeta = storefront.design_config?.pages.home.meta;
+    const defaultTitle = storefront.meta_title || storefront.name || "Store";
     const defaultDescription =
-      storefront.design_config?.pages.home.meta.description || "";
-    const defaultImage = (storefront.design_config?.pages.home.meta as Record<string, unknown>)?.image as string || "";
+      storefront.meta_description ||
+      homeMeta?.description ||
+      "";
+    const defaultImage =
+      storefront.og_image ||
+      (homeMeta as Record<string, unknown>)?.image as string ||
+      "";
     const defaultUrl = getStorefrontUrl(slug);
 
     const title = options.title || defaultTitle;
@@ -104,6 +110,17 @@ export function useSEO(slug: string, options: SEOOptions = {}) {
       setMetaTag("robots", "noindex, nofollow");
     } else {
       removeMetaTag("robots");
+    }
+
+    // Favicon
+    if (storefront.favicon) {
+      let icon = document.querySelector('link[rel="icon"]') as HTMLLinkElement | null;
+      if (!icon) {
+        icon = document.createElement("link");
+        icon.setAttribute("rel", "icon");
+        document.head.appendChild(icon);
+      }
+      icon.setAttribute("href", storefront.favicon);
     }
   }, [storefront, slug, options]);
 }

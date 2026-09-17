@@ -31,14 +31,17 @@ export default function StorefrontHome({ storefrontSlug }: StorefrontHomeProps) 
 
   const storeUrl = getStorefrontUrl(storefrontSlug);
   const meta = storefront.design_config?.pages.home.meta;
+  const seoTitle = storefront.meta_title || meta?.title || `${storefront.name} — Online Store`;
+  const seoDescription = storefront.meta_description || meta?.description || `${storefront.name} — browse products and shop online.`;
+  const seoImage = storefront.og_image || ((meta as Record<string, unknown>)?.image as string) || "";
 
   return (
     <>
       <SEO
         storefrontSlug={storefrontSlug}
-        title={meta?.title || `${storefront.name} — Online Store`}
-        description={meta?.description || `${storefront.name} — browse products and shop online.`}
-        image={(meta as Record<string, unknown>)?.image as string || ""}
+        title={seoTitle}
+        description={seoDescription}
+        image={seoImage}
         url={storeUrl}
         type="website"
         keywords={[storefront.name, "shop", "online store", "buy"]}

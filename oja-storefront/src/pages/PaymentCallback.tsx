@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { Button } from "@oja/ui";
 import { AlertCircle, CheckCircle2, Loader2, PackageSearch } from "lucide-react";
+import { getStorefrontUrl } from "../utils/subdomain";
 import { verifyOrder } from "../shop/api";
 
 type PaymentState = "verifying" | "success" | "skipped" | "error";
@@ -10,6 +11,13 @@ export default function PaymentCallback() {
   const [params] = useSearchParams();
   const reference = params.get("reference") ?? "";
   const status = params.get("status") ?? "";
+  const storefrontSlug = params.get("storefront_slug") ?? "";
+
+  // Payments are made inside a specific store, so the callback should return
+  // the shopper there (via the subdomain URL) rather than the bare host.
+  const returnUrl = storefrontSlug
+    ? getStorefrontUrl(storefrontSlug, "/")
+    : "/";
 
   const [state, setState] = useState<PaymentState>("verifying");
 
@@ -38,6 +46,15 @@ export default function PaymentCallback() {
     };
   }, [reference, status]);
 
+  // After confirming, take the shopper back to their store's home page.
+  useEffect(() => {
+    if (state !== "success") return;
+    const timer = setTimeout(() => {
+      window.location.href = returnUrl;
+    }, 2500);
+    return () => clearTimeout(timer);
+  }, [state, returnUrl]);
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 max-w-md w-full text-center">
@@ -61,10 +78,11 @@ export default function PaymentCallback() {
             </h1>
             <p className="text-sm text-gray-500 mb-6">
               Your order has been placed. A receipt has been sent to your email.
+              Taking you back to the store…
             </p>
-            <Link to="/">
-              <Button className="w-full">Continue shopping</Button>
-            </Link>
+            <a href={returnUrl} className="block">
+              <Button className="w-full">Back to store</Button>
+            </a>
           </>
         )}
 
@@ -77,11 +95,11 @@ export default function PaymentCallback() {
             <p className="text-sm text-gray-500 mb-6">
               Your order was not completed. You can try again from your cart.
             </p>
-            <Link to="/">
+            <a href={returnUrl} className="block">
               <Button variant="outline" className="w-full">
                 Back to store
               </Button>
-            </Link>
+            </a>
           </>
         )}
 
@@ -95,11 +113,11 @@ export default function PaymentCallback() {
               We couldn't verify your payment. Check your email for a receipt, or
               contact the store's support team.
             </p>
-            <Link to="/">
+            <a href={returnUrl} className="block">
               <Button variant="outline" className="w-full">
                 Back to store
               </Button>
-            </Link>
+            </a>
           </>
         )}
       </div>
