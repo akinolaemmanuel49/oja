@@ -1,6 +1,7 @@
 export const PublicHref = {
   loginRoute: "/login",
   signupRoute: "/signup",
+  forgotPasswordRoute: "/forgot-password",
 };
 
 export const SystemHref = {

@@ -16,8 +16,9 @@ import {
   X,
   ZoomIn,
 } from "lucide-react";
-import { Button,Label,Select,SelectContent,SelectItem,SelectTrigger,SelectValue,Slider } from "@oja/ui";
+import { Button,Label,Select,SelectContent,SelectItem,SelectTrigger,SelectValue,Slider,toast } from "@oja/ui";
 import { useStorefront } from "@/hooks/useStorefront";
+import apiClient from "@/api/client";
 
 // ============================================================================
 // FILTER CONTEXT - Share filter state across components
@@ -1332,8 +1333,35 @@ function ProductInfoRenderer({
 
   // Use the shared product detail context
   const { selectedVariantId, setSelectedVariantId } = useProductDetail();
+  const { storefrontId } = useStorefront();
 
   const br = getBorderRadius(theme.borderRadius);
+
+  const handleAddToCart = async () => {
+    if (!product) return;
+    if (isVariable && (!selectedVariantId || !currentVariant)) {
+      toast.error("Please select a product variant first");
+      return;
+    }
+    try {
+      await apiClient.post(
+        "/carts/items",
+        {
+          product_id: product.product_id,
+          variant_id: isVariable ? selectedVariantId : null,
+          quantity,
+        },
+        { params: { storefront_id: storefrontId } },
+      );
+      toast.success("Added to cart");
+    } catch (err: unknown) {
+      const detail =
+        (err as { response?: { data?: { detail?: string } } })?.response?.data
+          ?.detail ??
+        "Could not add to cart";
+      toast.error(String(detail));
+    }
+  };
 
   if (!product) {
     return (
@@ -1514,6 +1542,7 @@ function ProductInfoRenderer({
 
       <button
         disabled={!inStock}
+        onClick={() => void handleAddToCart()}
         className="w-full py-3 md:py-4 font-semibold text-white flex items-center justify-center gap-2 md:gap-3 text-base md:text-lg transition-all hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
         style={{ backgroundColor: theme.colors.primary, borderRadius: br }}
       >

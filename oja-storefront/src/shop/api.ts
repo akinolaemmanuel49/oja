@@ -6,20 +6,34 @@ import type {
   OrderOut,
 } from "./types";
 
+function readCookie(name: string): string | null {
+  const match = document.cookie.match(
+    new RegExp(`(?:^|; )${name}=([^;]*)`),
+  );
+  return match ? decodeURIComponent(match[1]) : null;
+}
+
 /**
  * Persist a per-device UUID so guests keep one cart per browser/device.
  * The id is also mirrored to a `device_id` cookie so the dashboard's
- * designer preview (localhost:5173) shares the same guest cart.
+ * designer preview (localhost:5173) shares the same guest cart — the cookie
+ * is the shared source of truth (localStorage is per-origin).
  */
 export function getDeviceId(): string {
   const KEY = "oja_device_id";
   let id = localStorage.getItem(KEY);
+  const cookieId = readCookie("device_id");
+
+  if (!id && cookieId) {
+    id = cookieId;
+    localStorage.setItem(KEY, id);
+  }
   if (!id) {
     id = crypto.randomUUID();
     localStorage.setItem(KEY, id);
   }
   try {
-    document.cookie = `device_id=${id}; path=/; max-age=${60 * 60 * 24 * 365}; samesite=lax`;
+    document.cookie = `device_id=${encodeURIComponent(id)}; path=/; max-age=${60 * 60 * 24 * 365}; samesite=lax`;
   } catch {
     // cookies may be blocked; the header path still works
   }

@@ -4,6 +4,7 @@ import { AppHref } from "./constants";
 
 const Login = lazy(() => import("@/pages/auth/Login"));
 const Signup = lazy(() => import("@/pages/auth/Signup"));
+const ForgotPassword = lazy(() => import("@/pages/auth/ForgotPassword"));
 
 const DashboardHome = lazy(() => import("@/pages/dashboard/Home"));
 
@@ -74,6 +75,7 @@ type RouteConfig = {
 export const publicRoutes: RouteConfig[] = [
   { path: AppHref.loginRoute, element: <Login /> },
   { path: AppHref.signupRoute, element: <Signup /> },
+  { path: AppHref.forgotPasswordRoute, element: <ForgotPassword /> },
 ];
 
 export const protectedRoutes: RouteConfig[] = [

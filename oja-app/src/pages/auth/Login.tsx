@@ -114,6 +114,12 @@ export default function Login() {
                 />
               </div>
 
+              <div className="text-right -mt-2">
+                <a href="/forgot-password" className="text-xs text-primary hover:underline">
+                  Forgot password?
+                </a>
+              </div>
+
               <motion.div whileTap={{ scale: 0.98 }} whileHover={{ scale: 1.01 }}>
                 <Button
                   type="submit"
