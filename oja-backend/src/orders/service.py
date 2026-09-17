@@ -21,14 +21,14 @@ from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.core.config import settings
-from src.core.email import send_order_confirmation_email
+from src.core.email import send_order_confirmation_email, send_order_status_email
 from src.carts.service import get_cart_id
 from src.storefronts.service import storefront_exists_service
 
 logger = logging.getLogger("oja.orders")
 
 GET_STOREFRONT_TENANT_QUERY = text("""
-    SELECT id, name, tenant_id FROM storefronts
+    SELECT id, name, slug, tenant_id FROM storefronts
     WHERE id = :storefront_id AND status = 'active' AND deleted_at IS NULL
     LIMIT 1
 """)
@@ -149,6 +149,51 @@ LIST_PLATFORM_ORDERS_QUERY = text("""
     INNER JOIN storefronts sf ON sf.id = o.storefront_id
     WHERE c.platform_id = :platform_id
     ORDER BY o.created_at DESC
+""")
+
+LIST_STOREFRONT_ORDERS_QUERY = text("""
+    SELECT o.id, o.order_number, o.status, o.subtotal, o.shipping_fee, o.total,
+           o.currency, o.created_at, o.updated_at, o.customer_email,
+           o.customer_name, o.payment_reference, o.payment_gateway, o.note,
+           o.storefront_id, sf.name AS storefront_name, sf.slug AS storefront_slug
+    FROM orders o
+    INNER JOIN storefronts sf ON sf.id = o.storefront_id
+    WHERE sf.tenant_id = :tenant_id AND o.storefront_id = :storefront_id
+    ORDER BY o.created_at DESC
+""")
+
+LIST_STOREFRONT_ORDERS_BY_STATUS_QUERY = text("""
+    SELECT o.id, o.order_number, o.status, o.subtotal, o.shipping_fee, o.total,
+           o.currency, o.created_at, o.updated_at, o.customer_email,
+           o.customer_name, o.payment_reference, o.payment_gateway, o.note,
+           o.storefront_id, sf.name AS storefront_name, sf.slug AS storefront_slug
+    FROM orders o
+    INNER JOIN storefronts sf ON sf.id = o.storefront_id
+    WHERE sf.tenant_id = :tenant_id AND o.storefront_id = :storefront_id
+      AND o.status = :status
+    ORDER BY o.created_at DESC
+""")
+
+GET_STOREFRONT_ORDER_DETAIL_QUERY = text("""
+    SELECT o.id, o.order_number, o.status, o.subtotal, o.shipping_fee, o.total,
+           o.currency, o.created_at, o.updated_at, o.customer_email,
+           o.customer_name, o.payment_reference, o.payment_gateway, o.note,
+           o.storefront_id, sf.name AS storefront_name, sf.slug AS storefront_slug
+    FROM orders o
+    INNER JOIN storefronts sf ON sf.id = o.storefront_id
+    WHERE sf.tenant_id = :tenant_id AND o.id = :order_id
+    LIMIT 1
+""")
+
+UPDATE_ORDER_STATUS_QUERY = text("""
+    UPDATE orders o
+    SET status = :status, note = COALESCE(:note, note), updated_at = NOW()
+    FROM storefronts sf
+    WHERE o.id = :order_id AND o.storefront_id = sf.id AND sf.tenant_id = :tenant_id
+    RETURNING o.id, o.order_number, o.status, o.subtotal, o.shipping_fee, o.total,
+              o.currency, o.created_at, o.updated_at, o.customer_email,
+              o.customer_name, o.payment_reference, o.payment_gateway, o.note,
+              o.storefront_id, sf.name AS storefront_name, sf.slug AS storefront_slug
 """)
 
 GET_ORDER_ITEMS_QUERY = text("""
@@ -316,6 +361,7 @@ async def checkout_service(
     callback_url = (
         f"{settings.FRONTEND_STOREFRONT_URL}/payment-callback"
         f"?storefront_id={storefront_id}"
+        f"&storefront_slug={storefront['slug']}"
     )
 
     # Get the payment reference BEFORE creating the order (idempotency key).
@@ -538,3 +584,103 @@ async def list_platform_orders_service(
         order["items"] = [dict(i) for i in items_result.mappings()]
         orders.append(order)
     return orders
+
+
+async def list_storefront_orders_service(
+    db: AsyncSession,
+    tenant_id: str,
+    storefront_id: str,
+    status: Optional[str] = None,
+) -> List[Dict[str, Any]]:
+    """Order list for storefront staff (orders within one tenant storefront)."""
+    if status:
+        result = await db.execute(
+            LIST_STOREFRONT_ORDERS_BY_STATUS_QUERY,
+            {"tenant_id": tenant_id, "storefront_id": storefront_id, "status": status},
+        )
+    else:
+        result = await db.execute(
+            LIST_STOREFRONT_ORDERS_QUERY,
+            {"tenant_id": tenant_id, "storefront_id": storefront_id},
+        )
+    return [dict(row) for row in result.mappings()]
+
+
+async def get_storefront_order_detail_service(
+    db: AsyncSession, tenant_id: str, order_id: str
+) -> Dict[str, Any]:
+    """Order detail (with line items) for storefront staff."""
+    result = await db.execute(
+        GET_STOREFRONT_ORDER_DETAIL_QUERY,
+        {"tenant_id": tenant_id, "order_id": order_id},
+    )
+    row = result.mappings().first()
+    if not row:
+        raise ValueError("Order not found")
+    order = dict(row)
+    items_result = await db.execute(GET_ORDER_ITEMS_QUERY, {"order_id": order_id})
+    order["items"] = [dict(i) for i in items_result.mappings()]
+    return order
+
+
+FINAL_ORDER_STATUSES = ("completed", "cancelled", "failed")
+
+
+async def update_order_status_service(
+    db: AsyncSession,
+    tenant_id: str,
+    order_id: str,
+    status: str,
+    note: Optional[str] = None,
+) -> Dict[str, Any]:
+    """
+    Update an order status (storefront staff), notifying the customer by email
+    when the status actually changes.
+
+    Raises:
+        ValueError: If the order is not found or the transition is invalid
+    """
+    current_result = await db.execute(
+        GET_STOREFRONT_ORDER_DETAIL_QUERY,
+        {"tenant_id": tenant_id, "order_id": order_id},
+    )
+    current = current_result.mappings().first()
+    if not current:
+        raise ValueError("Order not found")
+
+    current_status = current["status"]
+    if current_status in FINAL_ORDER_STATUSES and current_status != status:
+        raise ValueError(
+            f"An order in '{current_status}' state cannot be changed"
+        )
+
+    if status == current_status and note is None:
+        return dict(current)
+
+    result = await db.execute(
+        UPDATE_ORDER_STATUS_QUERY,
+        {
+            "tenant_id": tenant_id,
+            "order_id": order_id,
+            "status": status,
+            "note": note,
+        },
+    )
+    row = result.mappings().first()
+    if not row:
+        raise ValueError("Order not found")
+    updated = dict(row)
+
+    if status != current_status and updated.get("customer_email"):
+        try:
+            send_order_status_email(
+                updated["customer_email"],
+                store_name=updated.get("storefront_name") or "Oja",
+                order_number=updated["order_number"],
+                status=status,
+                note=note,
+            )
+        except RuntimeError:
+            pass  # email failure should not break the status update
+
+    return updated

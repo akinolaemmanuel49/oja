@@ -115,3 +115,27 @@ def send_order_confirmation_email(
         ),
         text=f"Order {order_number} confirmed at {store_name}. Total paid: {total}.",
     )
+
+
+def send_order_status_email(
+    to: str,
+    store_name: str,
+    order_number: str,
+    status: str,
+    note: Optional[str] = None,
+) -> None:
+    """Notify a customer that their order status changed."""
+    status_label = status.replace("_", " ").capitalize()
+    body = (
+        f"<p>Your order <strong>{order_number}</strong> at "
+        f"<strong>{store_name}</strong> is now "
+        f"<strong>{status_label}</strong>.</p>"
+    )
+    if note:
+        body += f"<p>Note from the store: {note}</p>"
+    send_email(
+        to=to,
+        subject=f"Your order {order_number} is now {status_label} - {store_name}",
+        html=body,
+        text=f"Your order {order_number} at {store_name} is now {status_label}.",
+    )

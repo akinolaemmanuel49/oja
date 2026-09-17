@@ -3,7 +3,7 @@ Pydantic schemas for orders / checkout.
 """
 
 from datetime import datetime
-from typing import List, Optional
+from typing import List, Literal, Optional
 from uuid import UUID
 
 from pydantic import BaseModel, EmailStr, Field
@@ -58,3 +58,35 @@ class PaymentVerifyOut(BaseModel):
     order_number: str
     status: str
     message: str
+
+
+class StorefrontOrderOut(BaseModel):
+    """Order detail for storefront staff (dashboard order management)."""
+
+    id: UUID
+    order_number: str
+    status: str
+    subtotal: float
+    shipping_fee: float
+    total: float
+    currency: str
+    created_at: datetime
+    updated_at: Optional[datetime] = None
+    customer_email: Optional[str] = None
+    customer_name: Optional[str] = None
+    payment_reference: Optional[str] = None
+    payment_gateway: Optional[str] = None
+    note: Optional[str] = None
+    storefront_id: UUID
+    storefront_name: Optional[str] = None
+    storefront_slug: Optional[str] = None
+    items: List[OrderItemOut] = []
+
+
+class OrderStatusUpdate(BaseModel):
+    """Request to update an order's status (storefront staff)."""
+
+    status: Literal[
+        "pending", "paid", "processing", "completed", "cancelled", "failed"
+    ]
+    note: Optional[str] = None

@@ -19,29 +19,39 @@ from src.storefronts.schemas import StorefrontCreate, StorefrontOut, StorefrontU
 INSERT_STOREFRONT_QUERY = text("""
     INSERT INTO storefronts (
         tenant_id, name, slug, domain, status,
+        meta_title, meta_description, og_image, favicon,
         created_at, updated_at
     )
     VALUES (
         :tenant_id, :name, :slug, :domain, :status,
+        :meta_title, :meta_description, :og_image, :favicon,
         NOW(), NOW()
     )
-    RETURNING id, tenant_id, name, slug, domain, status, design_config, created_at, updated_at
+    RETURNING id, tenant_id, name, slug, domain, status, design_config,
+              meta_title, meta_description, og_image, favicon,
+              created_at, updated_at
 """)
 
 GET_STOREFRONT_QUERY = text("""
-    SELECT id, tenant_id, name, slug, slug_updated_at, domain, status, design_config, deleted_at, created_at, updated_at
+    SELECT id, tenant_id, name, slug, slug_updated_at, domain, status, design_config,
+           meta_title, meta_description, og_image, favicon,
+           deleted_at, created_at, updated_at
     FROM storefronts
     WHERE id = :id AND tenant_id = :tenant_id
 """)
 
 GET_STOREFRONT_BY_SLUG_QUERY = text("""
-    SELECT id, tenant_id, name, slug, slug_updated_at, domain, status, design_config, deleted_at, created_at, updated_at
+    SELECT id, tenant_id, name, slug, slug_updated_at, domain, status, design_config,
+           meta_title, meta_description, og_image, favicon,
+           deleted_at, created_at, updated_at
     FROM storefronts
     WHERE slug = :slug
 """)
 
 LIST_STOREFRONTS_QUERY = text("""
-SELECT id, tenant_id, name, slug, slug_updated_at, domain, status, design_config, deleted_at, created_at, updated_at
+SELECT id, tenant_id, name, slug, slug_updated_at, domain, status, design_config,
+       meta_title, meta_description, og_image, favicon,
+       deleted_at, created_at, updated_at
 FROM storefronts
 WHERE tenant_id = :tenant_id
 ORDER BY created_at DESC
@@ -116,6 +126,10 @@ async def create_storefront_service(
                 "slug": data.slug,
                 "domain": data.domain,
                 "status": data.status,
+                "meta_title": data.meta_title,
+                "meta_description": data.meta_description,
+                "og_image": data.og_image,
+                "favicon": data.favicon,
             },
         )
 
@@ -229,7 +243,17 @@ async def update_storefront_service(
     db: AsyncSession, storefront_id: str, tenant_id: str, data: StorefrontUpdate
 ) -> Optional[Dict[str, Any]]:
     try:
-        if not any([data.name, data.slug, data.domain, data.status]):
+        updatable_fields = (
+            "name",
+            "slug",
+            "domain",
+            "status",
+            "meta_title",
+            "meta_description",
+            "og_image",
+            "favicon",
+        )
+        if not any(getattr(data, f) is not None for f in updatable_fields):
             return None
 
         # Handle Slug Change Restriction Logic
@@ -282,11 +306,29 @@ async def update_storefront_service(
             updates.append("status = :status")
             params["status"] = data.status
 
+        if data.meta_title is not None:
+            updates.append("meta_title = :meta_title")
+            params["meta_title"] = data.meta_title
+
+        if data.meta_description is not None:
+            updates.append("meta_description = :meta_description")
+            params["meta_description"] = data.meta_description
+
+        if data.og_image is not None:
+            updates.append("og_image = :og_image")
+            params["og_image"] = data.og_image
+
+        if data.favicon is not None:
+            updates.append("favicon = :favicon")
+            params["favicon"] = data.favicon
+
         query = text(f"""
             UPDATE storefronts
             SET {", ".join(updates)}, updated_at = NOW()
             WHERE id = :id AND tenant_id = :tenant_id
-            RETURNING id, tenant_id, name, slug, domain, status, design_config, created_at, updated_at, slug_updated_at
+            RETURNING id, tenant_id, name, slug, domain, status, design_config,
+                      meta_title, meta_description, og_image, favicon,
+                      created_at, updated_at, slug_updated_at
         """)
 
         result = await db.execute(query, params)

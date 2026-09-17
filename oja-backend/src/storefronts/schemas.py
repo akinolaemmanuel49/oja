@@ -20,6 +20,10 @@ class StorefrontCreate(BaseModel):
     slug: str = Field(..., min_length=1, max_length=255, pattern=r"^[a-z0-9-]+$")
     domain: Optional[str] = None
     status: str = Field(default="active", pattern="^(active|inactive)$")
+    meta_title: Optional[str] = None
+    meta_description: Optional[str] = None
+    og_image: Optional[str] = None
+    favicon: Optional[str] = None
 
 
 class StorefrontUpdate(BaseModel):
@@ -31,6 +35,10 @@ class StorefrontUpdate(BaseModel):
     slug: Optional[str] = None
     domain: Optional[str] = None
     status: Optional[str] = None
+    meta_title: Optional[str] = None
+    meta_description: Optional[str] = None
+    og_image: Optional[str] = None
+    favicon: Optional[str] = None
 
 
 class StorefrontOut(BaseModel):
@@ -46,6 +54,10 @@ class StorefrontOut(BaseModel):
     domain: Optional[str]
     status: str
     design_config: Optional[dict]
+    meta_title: Optional[str] = None
+    meta_description: Optional[str] = None
+    og_image: Optional[str] = None
+    favicon: Optional[str] = None
     deleted_at: Optional[datetime] = None
     created_at: datetime
     updated_at: datetime

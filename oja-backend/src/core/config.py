@@ -15,7 +15,6 @@ class Settings(BaseSettings):
         env_file=".env",
         env_file_encoding="utf-8",
         case_sensitive=False,
-        env_prefix="APP_",
         extra="ignore",
     )
 
@@ -29,7 +28,8 @@ class Settings(BaseSettings):
     # Database (asyncpg driver)
     DATABASE_URL: PostgresDsn = Field(
         description="PostgreSQL connection string, e.g. postgresql+asyncpg://user:pass@localhost:5432/db",
-        default=PostgresDsn("postgresql+asyncpg://user:pass@localhost:5432/db"),
+        default=PostgresDsn(
+            "postgresql+asyncpg://user:pass@localhost:5432/db"),
     )
 
     # Database (psycopg3 driver)
